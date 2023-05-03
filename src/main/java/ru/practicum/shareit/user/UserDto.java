@@ -1,4 +1,3 @@
-
 package ru.practicum.shareit.user;
 
 import lombok.AllArgsConstructor;

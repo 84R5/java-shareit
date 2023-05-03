@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.shareit.exception.item.ItemCreationException;
 import ru.practicum.shareit.exception.item.ItemNotFoundException;
+import ru.practicum.shareit.exception.item.WrongOwnerException;
 import ru.practicum.shareit.exception.user.EmailConflictException;
 import ru.practicum.shareit.exception.user.UserCreationException;
 import ru.practicum.shareit.exception.user.UserNotFoundException;
-import ru.practicum.shareit.exception.item.WrongOwnerException;
 
 @Slf4j
 @RestControllerAdvice

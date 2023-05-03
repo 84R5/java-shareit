@@ -1,15 +1,14 @@
 package ru.practicum.shareit.item;
 
-        import lombok.AllArgsConstructor;
-        import lombok.Data;
-        import lombok.NoArgsConstructor;
-        import org.hibernate.validator.constraints.Length;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
-        import javax.validation.constraints.NotBlank;
-        import javax.validation.constraints.NotNull;
-/**
- * TODO Sprint add-controllers.
- */
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

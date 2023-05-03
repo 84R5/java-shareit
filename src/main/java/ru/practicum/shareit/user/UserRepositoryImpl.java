@@ -7,7 +7,7 @@ import java.util.*;
 @Repository("UserInMemoryRepository")
 public class UserRepositoryImpl implements UserRepository {
     private final Map<Long, User> users = new HashMap<>();
-    private final Map<Long,String> emails = new HashMap<>();
+    private final Map<Long, String> emails = new HashMap<>();
 
     private Long currentId = 0L;
 
