@@ -1,7 +1,10 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -11,6 +14,8 @@ import ru.practicum.shareit.user.UserDto;
 import ru.practicum.shareit.user.UserService;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 
 @SpringBootTest
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
@@ -20,44 +25,41 @@ class ItemServiceTest {
     private final UserService userService;
     private final ItemService itemService;
 
-    @Test
-    void create() {
-        addData();
-        assertThat(itemService.getById(2L))
-                .hasFieldOrPropertyWithValue("name", "Молоток")
-                .hasFieldOrPropertyWithValue("description", "Может забивать, может не забивать");
+    @DisplayName("Test create item")
+    @ParameterizedTest
+    @CsvSource({"Молоток, Может забивать, может не забивать, true"})
+    void createItem(String name, String description, Boolean available) {
+        assertThat(itemService.create(userService.create(
+                        new UserDto("Mikhael", "Arh@yandex.ru")).getId(),
+                new ItemDto(name, description, available)))
+                .hasFieldOrPropertyWithValue("name", name)
+                .hasFieldOrPropertyWithValue("description", description);
     }
 
     @Test
     void update() {
         addData();
-        assertThat(itemService.getById(2L))
-                .hasFieldOrPropertyWithValue("name", "Молоток")
-                .hasFieldOrPropertyWithValue("description", "Может забивать, может не забивать");
+        assertThat(itemService.getById(2L)).hasFieldOrPropertyWithValue("name", "Молоток").hasFieldOrPropertyWithValue("description", "Может забивать, может не забивать");
         itemService.update(2L, 2L, new ItemDto("Молоток, с синей изолентой", "Усовершенствованн, может пробить броню", true));
-        assertThat(itemService.getById(2L))
-                .hasFieldOrPropertyWithValue("name", "Молоток, с синей изолентой")
-                .hasFieldOrPropertyWithValue("description", "Усовершенствованн, может пробить броню");
+        assertThat(itemService.getById(2L)).hasFieldOrPropertyWithValue("name", "Молоток, с синей изолентой").hasFieldOrPropertyWithValue("description", "Усовершенствованн, может пробить броню");
     }
 
     @Test
     void getById() {
         addData();
-        assertThat(itemService.getById(3L))
-                .hasFieldOrPropertyWithValue("name", "Футбольное поле")
-                .hasFieldOrPropertyWithValue("description", "Для игры в футбол, требуется мяч");
+        assertThat(itemService.getById(3L)).hasFieldOrPropertyWithValue("name", "Футбольное поле").hasFieldOrPropertyWithValue("description", "Для игры в футбол, требуется мяч");
     }
 
     @Test
     void getByUserId() {
         addData();
-        assertThat(itemService.getByUserId(2L).size()).isEqualTo(2);
+        assertThat(itemService.getByUserId(2L), hasSize(2));
     }
 
     @Test
     void search_returnItemByText() {
         addData();
-        assertThat(itemService.search("мяч").size()).isEqualTo(2);
+        assertThat(itemService.search("мяч"), hasSize(2));
     }
 
     void addData() {
