@@ -14,53 +14,17 @@ import ru.practicum.shareit.exception.user.UserNotFoundException;
 
 @Slf4j
 @RestControllerAdvice
-
 public class ErrorHandler {
-    @ExceptionHandler
+
+    @ExceptionHandler({UserNotFoundException.class, ItemNotFoundException.class, WrongOwnerException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handle(final UserNotFoundException e) {
-        return new ErrorResponse(
-                "error", e.getMessage()
-        );
+    public ErrorResponse handleNotFoundExceptions(final RuntimeException e) {
+        return new ErrorResponse("error", e.getMessage());
     }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handle(final ItemNotFoundException e) {
-        return new ErrorResponse(
-                "error", e.getMessage()
-        );
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handle(final WrongOwnerException e) {
-        return new ErrorResponse(
-                "error", e.getMessage()
-        );
-    }
-
-    @ExceptionHandler
+    @ExceptionHandler({UserCreationException.class, ItemCreationException.class, EmailConflictException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handle(final UserCreationException e) {
-        return new ErrorResponse(
-                "error", e.getMessage()
-        );
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handle(final ItemCreationException e) {
-        return new ErrorResponse(
-                "error", e.getMessage()
-        );
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handle(final EmailConflictException e) {
-        return new ErrorResponse(
-                "error ", e.getMessage()
-        );
+        return new ErrorResponse("error", e.getMessage());
     }
 }
