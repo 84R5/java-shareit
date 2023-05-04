@@ -16,9 +16,15 @@ import ru.practicum.shareit.exception.user.UserNotFoundException;
 @RestControllerAdvice
 public class ErrorHandler {
 
-    @ExceptionHandler({UserNotFoundException.class, ItemNotFoundException.class, WrongOwnerException.class})
+    @ExceptionHandler({UserNotFoundException.class, ItemNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundExceptions(final RuntimeException e) {
+        return new ErrorResponse("error", e.getMessage());
+    }
+
+    @ExceptionHandler({WrongOwnerException.class})
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleForbidden(final WrongOwnerException e) {
         return new ErrorResponse("error", e.getMessage());
     }
 
