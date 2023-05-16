@@ -19,18 +19,28 @@ public class ErrorHandler {
     @ExceptionHandler({UserNotFoundException.class, ItemNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundExceptions(final RuntimeException e) {
+        log.error("User not found: {}", e.getMessage(), e);
         return new ErrorResponse("error", e.getMessage());
     }
 
     @ExceptionHandler({WrongOwnerException.class})
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponse handleForbidden(final WrongOwnerException e) {
+        log.error("Access forbidden a: {}", e.getMessage(), e);
         return new ErrorResponse("error", e.getMessage());
     }
 
     @ExceptionHandler({UserCreationException.class, ItemCreationException.class, EmailConflictException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handle(final UserCreationException e) {
+        log.error("Error creation: {}", e.getMessage(), e);
+        return new ErrorResponse("error", e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handle(final UnknownStateException e) {
+        log.error("Server_error: {}", e.getMessage(), e);
         return new ErrorResponse("error", e.getMessage());
     }
 }

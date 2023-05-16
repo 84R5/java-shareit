@@ -8,9 +8,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import ru.practicum.shareit.item.ItemDto;
 import ru.practicum.shareit.item.ItemService;
-import ru.practicum.shareit.user.UserDto;
 import ru.practicum.shareit.user.UserService;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
