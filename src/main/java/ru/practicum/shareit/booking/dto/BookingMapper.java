@@ -3,16 +3,17 @@ package ru.practicum.shareit.booking.dto;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.Status;
 import ru.practicum.shareit.item.dto.ItemMapper;
+import ru.practicum.shareit.user.dto.UserMapper;
 
 public class BookingMapper {
 
     public static BookingFullDto mapToFullDto(Booking booking){
-        return BookingFullDto(booking.getId(),
-                booking.getStart(),
-                booking.getEnd(),
+        return new BookingFullDto(booking.getId(),
+                        booking.getStart(),
+                        booking.getEnd(),
+                booking.getStatus(),
                 ItemMapper.mapToShortDto(booking.getItem()),
-                UserMapper.mapToShortDto(booking.getBooker()),
-                booking.getStatus());
+                UserMapper.mapToShortDto(booking.getBooker()));
     }
 
     public static BookingShortDto mapToShortDto(Booking booking) {

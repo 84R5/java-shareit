@@ -11,9 +11,9 @@ public interface UserService {
 
     UserFullDto getById(Long userId);
 
-    UserFullDto create(UserInputDto user);
+    UserFullDto create(UserInputDto userInputDto);
 
-    UserFullDto update(UserInputDto user, Long id);
+    UserFullDto update(UserInputDto userInputDto, Long id);
 
     void deleteById(Long userId);
 

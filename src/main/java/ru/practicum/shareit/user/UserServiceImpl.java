@@ -11,12 +11,14 @@ import ru.practicum.shareit.user.dto.UserInputDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 class UserServiceImpl implements UserService {
+
     private final UserRepository userRepository;
 
     @Override
@@ -29,52 +31,48 @@ class UserServiceImpl implements UserService {
         return result;
     }
 
+    @Override
     public UserFullDto getById(Long userId) {
         UserFullDto result = userRepository
                 .findById(userId)
                 .map(UserMapper::mapToFullDto)
-                .orElseThrow(() -> new UserNotFoundException(userId));
+                .orElseThrow(() -> new NullPointerException(String.format("User %d is not found.", userId)));
         log.info("User {} is found.", result.getId());
         return result;
     }
 
-    public UserFullDto create(UserInputDto userDto) {
-        User user = UserMapper.mapToUser(userDto, new User());
-        UserFullDto result = userRepository
-                .create(user)
+    @Override
+    public UserFullDto create(UserInputDto userInputDto) {
+        User user = UserMapper.mapToUser(userInputDto, new User());
+        UserFullDto result = Optional.of(userRepository.save(user))
                 .map(UserMapper::mapToFullDto)
-                .orElseThrow(() -> new UserCreationException(user.getName()));
+                .orElseThrow();
         log.info("User {} {} created.", result.getId(), result.getName());
         return result;
     }
 
-    public UserFullDto update(UserInputDto newUser, Long userId) {
+    @Override
+    public UserFullDto update(UserInputDto userInputDto, Long userId) {
         User oldUser = getUserById(userId);
-        String email = newUser.getEmail();
-        if (email != null
-                && !oldUser.getEmail().equalsIgnoreCase(email)
-                && userRepository.emailIsExist(email)) {
-            log.warn("User's email {} is wrong.", newUser.getEmail());
-            throw new EmailConflictException(newUser.getEmail());
-        }
-        UserFullDto result = userRepository
-                .update(UserMapper.mapToUser(newUser, oldUser))
+        UserFullDto result = Optional.of(userRepository.save(UserMapper.mapToUser(userInputDto, oldUser)))
                 .map(UserMapper::mapToFullDto)
-                .orElseThrow(() -> new UserNotFoundException(userId));
+                .orElseThrow(() -> new NullPointerException(String.format("User %d is not found.", userId)));
         log.info("User {} {} updated.", result.getId(), result.getName());
         return result;
     }
 
+    @Override
     public void deleteById(Long userId) {
         User result = getUserById(userId);
-        userRepository.removeById(result.getId());
+        userRepository.deleteById(result.getId());
         log.info("User {} removed.", result.getName());
     }
 
+    @Override
     public User getUserById(Long userId) {
         User result = userRepository
                 .findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
+                .orElseThrow(() -> new NullPointerException(String.format("User %d is not found.", userId)));
         log.info("User {} is found.", result.getId());
         return result;
     }

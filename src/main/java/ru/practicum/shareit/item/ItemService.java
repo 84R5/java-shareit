@@ -1,5 +1,7 @@
 package ru.practicum.shareit.item;
 
+import ru.practicum.shareit.comment.dto.CommentFullDto;
+import ru.practicum.shareit.comment.dto.CommentInputDto;
 import ru.practicum.shareit.item.dto.ItemFullDto;
 import ru.practicum.shareit.item.dto.ItemInputDto;
 
@@ -12,11 +14,11 @@ public interface ItemService {
 
     List<ItemFullDto> getByUserId(Long userId);
 
-    ItemFullDto getById(Long userId,Long itemId);
+    ItemFullDto getById(Long userId, Long itemId);
 
-    ItemFullDto create(Long userId, ItemInputDto itemDto);
+    ItemFullDto create(Long userId, ItemInputDto itemInputDto);
 
-    ItemFullDto update(Long userId, Long itemId, ItemInputDto itemDto);
+    ItemFullDto update(Long userId, Long itemId, ItemInputDto itemInputDto);
 
     Item getItemById(Long itemId);
 
