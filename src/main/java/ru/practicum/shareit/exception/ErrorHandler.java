@@ -5,42 +5,37 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.practicum.shareit.exception.item.ItemCreationException;
-import ru.practicum.shareit.exception.item.ItemNotFoundException;
-import ru.practicum.shareit.exception.item.WrongOwnerException;
-import ru.practicum.shareit.exception.user.EmailConflictException;
-import ru.practicum.shareit.exception.user.UserCreationException;
-import ru.practicum.shareit.exception.user.UserNotFoundException;
+
+import javax.validation.ValidationException;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
 
-    @ExceptionHandler({UserNotFoundException.class, ItemNotFoundException.class})
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleNotFoundExceptions(final RuntimeException e) {
-        log.error("User not found: {}", e.getMessage(), e);
-        return new ErrorResponse("error", e.getMessage());
-    }
 
-    @ExceptionHandler({WrongOwnerException.class})
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErrorResponse handleForbidden(final WrongOwnerException e) {
-        log.error("Access forbidden a: {}", e.getMessage(), e);
-        return new ErrorResponse("error", e.getMessage());
-    }
-
-    @ExceptionHandler({UserCreationException.class, ItemCreationException.class, EmailConflictException.class})
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handle(final UserCreationException e) {
-        log.error("Error creation: {}", e.getMessage(), e);
-        return new ErrorResponse("error", e.getMessage());
+    @ExceptionHandler({IllegalStateException.class, NoSuchElementException.class, ValidationException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handle(final IllegalStateException e) {
+        log.error("IllegalException: {}", e.getMessage(), e);
+        return new ErrorResponse(
+                e.getCause().getMessage()
+        );
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handle(final UnknownStateException e) {
         log.error("Server_error: {}", e.getMessage(), e);
-        return new ErrorResponse("error", e.getMessage());
+        return new ErrorResponse(e.getMessage());
     }
+
+    @ExceptionHandler({NullPointerException.class, IllegalArgumentException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handle(final NullPointerException e) {
+        return new ErrorResponse(
+                e.getMessage()
+        );
+    }
+
 }
