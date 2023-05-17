@@ -27,8 +27,8 @@ public class ItemController {
 
     @PatchMapping("/{itemId}")
     public ItemFullDto update(@RequestHeader("X-Sharer-User-Id") Long userId,
-                          @RequestBody ItemInputDto itemDto,
-                          @PathVariable Long itemId) {
+                              @RequestBody ItemInputDto itemDto,
+                              @PathVariable Long itemId) {
         return itemService.update(userId, itemId, itemDto);
     }
 
@@ -51,7 +51,7 @@ public class ItemController {
     @PostMapping("/{itemId}/comment")
     public CommentFullDto addComment(@RequestHeader("X-Sharer-User-Id") Long userId,
                                      @PathVariable Long itemId,
-                                     @Valid @RequestBody CommentInputDto commentInputDto){
+                                     @Valid @RequestBody CommentInputDto commentInputDto) {
         return itemService.addComment(userId, itemId, commentInputDto);
     }
 }

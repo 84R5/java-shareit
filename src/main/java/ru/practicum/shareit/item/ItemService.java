@@ -5,7 +5,6 @@ import ru.practicum.shareit.comment.dto.CommentInputDto;
 import ru.practicum.shareit.item.dto.ItemFullDto;
 import ru.practicum.shareit.item.dto.ItemInputDto;
 
-import javax.xml.stream.events.Comment;
 import java.util.List;
 
 public interface ItemService {

@@ -7,10 +7,10 @@ import ru.practicum.shareit.user.dto.UserMapper;
 
 public class BookingMapper {
 
-    public static BookingFullDto mapToFullDto(Booking booking){
+    public static BookingFullDto mapToFullDto(Booking booking) {
         return new BookingFullDto(booking.getId(),
-                        booking.getStart(),
-                        booking.getEnd(),
+                booking.getStart(),
+                booking.getEnd(),
                 booking.getStatus(),
                 ItemMapper.mapToShortDto(booking.getItem()),
                 UserMapper.mapToShortDto(booking.getBooker()));
