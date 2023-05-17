@@ -8,9 +8,6 @@ import ru.practicum.shareit.user.User;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-bookings.
- */
 @Data
 @RequiredArgsConstructor
 @Entity
@@ -19,17 +16,22 @@ public class Booking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final Long id;
+    private Long id;
+
     @Column(name = "START_TIME")
     private LocalDateTime start;
+
     @Column(name = "END_TIME")
     private LocalDateTime end;
+
     @ManyToOne
     @JoinColumn(name = "ITEM_ID")
     private Item item;
+
     @ManyToOne
     @JoinColumn(name = "BOOKER_ID")
     private User booker;
+
     @Enumerated(EnumType.STRING)
     private Status status;
 }
