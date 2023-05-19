@@ -10,31 +10,30 @@ import ru.practicum.shareit.item.dto.ItemInputDto;
 import javax.validation.Valid;
 import java.util.List;
 
-/**
- * TODO Sprint add-controllers.
- */
+
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
 public class ItemController {
+
     private final ItemService itemService;
 
     @PostMapping
     public ItemFullDto create(@RequestHeader("X-Sharer-User-Id") Long userId,
-                              @Valid @RequestBody ItemInputDto itemDto) {
-        return itemService.create(userId, itemDto);
+                              @Valid @RequestBody ItemInputDto itemInputDto) {
+        return itemService.create(userId, itemInputDto);
     }
 
     @PatchMapping("/{itemId}")
     public ItemFullDto update(@RequestHeader("X-Sharer-User-Id") Long userId,
-                              @RequestBody ItemInputDto itemDto,
-                              @PathVariable Long itemId) {
-        return itemService.update(userId, itemId, itemDto);
+                          @RequestBody ItemInputDto itemInputDto,
+                          @PathVariable Long itemId) {
+        return itemService.update(userId, itemId, itemInputDto);
     }
 
     @GetMapping("/{itemId}")
     public ItemFullDto get(@RequestHeader("X-Sharer-User-Id") Long userId,
-                           @PathVariable Long itemId) {
+                              @PathVariable Long itemId) {
         return itemService.getById(userId, itemId);
     }
 

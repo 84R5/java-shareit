@@ -11,9 +11,9 @@ public class BookingMapper {
         return new BookingFullDto(booking.getId(),
                 booking.getStart(),
                 booking.getEnd(),
-                booking.getStatus(),
                 ItemMapper.mapToShortDto(booking.getItem()),
-                UserMapper.mapToShortDto(booking.getBooker()));
+                UserMapper.mapToShortDto(booking.getBooker()),
+                booking.getStatus());
     }
 
     public static BookingShortDto mapToShortDto(Booking booking) {
@@ -27,7 +27,7 @@ public class BookingMapper {
     public static Booking mapToBooking(BookingInputDto bookingInputDto, Booking booking) {
         booking.setStart(bookingInputDto.getStart());
         booking.setEnd(bookingInputDto.getEnd());
-        booking.setStatus(Status.WAIT);
+        booking.setStatus(Status.WAITING);
 
         return booking;
     }

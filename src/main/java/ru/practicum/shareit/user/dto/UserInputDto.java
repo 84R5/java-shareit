@@ -17,6 +17,8 @@ public class UserInputDto {
     @NotBlank
     private String name;
 
+    @NotNull
+    @NotBlank
     @Email
     private String email;
 }

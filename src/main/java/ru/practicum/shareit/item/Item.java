@@ -7,9 +7,6 @@ import ru.practicum.shareit.user.User;
 
 import javax.persistence.*;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Data
 @RequiredArgsConstructor
 @Entity

@@ -4,10 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.booking.dto.BookingFullDto;
-import ru.practicum.shareit.booking.dto.BookingInputDto;
-import ru.practicum.shareit.booking.dto.BookingMapper;
-import ru.practicum.shareit.exception.UnknownStateException;
+import ru.practicum.shareit.booking.dto.*;
+import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.ItemService;
 import ru.practicum.shareit.user.User;
@@ -47,7 +45,7 @@ public class BookingServiceImpl implements BookingService {
                 break;
             case WAITING:
                 bookings = bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(booker.getId(),
-                        Status.WAIT);
+                        Status.WAITING);
                 break;
             case REJECTED:
                 bookings = bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(booker.getId(),
@@ -84,7 +82,7 @@ public class BookingServiceImpl implements BookingService {
                 break;
             case WAITING:
                 bookings = bookingRepository.findAllByOwnerIdAndStatusOrderByStartDesc(owner.getId(),
-                        Status.WAIT);
+                        Status.WAITING);
                 break;
             case REJECTED:
                 bookings = bookingRepository.findAllByOwnerIdAndStatusOrderByStartDesc(owner.getId(),
@@ -150,7 +148,7 @@ public class BookingServiceImpl implements BookingService {
         Item item = itemService.getItemById(booking.getItem().getId());
         Status newStatus = isApproved ? Status.APPROVED : Status.REJECTED;
 
-        if (!booking.getStatus().equals(Status.WAIT) && owner.getId().equals(item.getOwner().getId())) {
+        if (!booking.getStatus().equals(Status.WAITING) && owner.getId().equals(item.getOwner().getId())) {
             throw new IllegalStateException(String.format("Booking %d cannot be updated", bookingId));
         }
         if (!owner.getId().equals(item.getOwner().getId())) {

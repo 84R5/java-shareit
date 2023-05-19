@@ -14,6 +14,7 @@ public class UserMapper {
                 user.getName());
     }
 
+
     public static User mapToUser(UserInputDto userInputDto, User user) {
         if (userInputDto.getId() != null) {
             user.setId(userInputDto.getId());

@@ -10,8 +10,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
-@Entity
 @RequiredArgsConstructor
+@Entity
 @EqualsAndHashCode
 @Table(name = "COMMENTS", schema = "PUBLIC")
 public class Comment {
