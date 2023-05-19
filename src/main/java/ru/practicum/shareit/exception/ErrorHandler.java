@@ -22,7 +22,7 @@ public class ErrorHandler {
         );
     }
 
-    @ExceptionHandler({NullPointerException.class, IllegalArgumentException.class})
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handle(final NullPointerException e) {
         return new ErrorResponse(
@@ -30,11 +30,36 @@ public class ErrorHandler {
         );
     }
 
-    @ExceptionHandler({ValidationException.class, IllegalStateException.class, NoSuchElementException.class})
+
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handle(final ValidationException e) {
         return new ErrorResponse(
                 e.getCause().getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handle(final IllegalStateException e) {
+        return new ErrorResponse(
+                e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handle(final IllegalArgumentException e) {
+        return new ErrorResponse(
+                e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handle(final NoSuchElementException e) {
+        return new ErrorResponse(
+                e.getMessage()
         );
     }
 }
