@@ -11,26 +11,18 @@ import java.util.NoSuchElementException;
 
 @Slf4j
 @RestControllerAdvice
+
 public class ErrorHandler {
-
-
-    @ExceptionHandler({IllegalStateException.class, NoSuchElementException.class, ValidationException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handle(final IllegalStateException e) {
-        log.error("IllegalException: {}", e.getMessage(), e);
-        return new ErrorResponse(
-                e.getCause().getMessage()
-        );
-    }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handle(final UnknownStateException e) {
-        log.error("Server_error: {}", e.getMessage(), e);
-        return new ErrorResponse(e.getMessage());
+        return new ErrorResponse(
+                e.getMessage()
+        );
     }
 
-    @ExceptionHandler({NullPointerException.class, IllegalArgumentException.class})
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handle(final NullPointerException e) {
         return new ErrorResponse(
@@ -38,4 +30,36 @@ public class ErrorHandler {
         );
     }
 
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handle(final ValidationException e) {
+        return new ErrorResponse(
+                e.getCause().getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handle(final IllegalStateException e) {
+        return new ErrorResponse(
+                e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handle(final IllegalArgumentException e) {
+        return new ErrorResponse(
+                e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handle(final NoSuchElementException e) {
+        return new ErrorResponse(
+                e.getMessage()
+        );
+    }
 }
