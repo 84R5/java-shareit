@@ -19,5 +19,5 @@ public class BookingFullDto {
     private LocalDateTime end;
     private Status status;
     private ItemShortDto item;
-    private UserShortDto user;
+    private UserShortDto booker;
 }
