@@ -1,9 +1,9 @@
 package ru.practicum.shareit.user.mapper;
 
-import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.dto.UserFullDto;
 import ru.practicum.shareit.user.dto.UserInputDto;
 import ru.practicum.shareit.user.dto.UserShortDto;
+import ru.practicum.shareit.user.model.User;
 
 public class UserMapper {
     public static UserFullDto mapToFullDto(User user) {

@@ -3,10 +3,11 @@ package ru.practicum.shareit.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.user.dto.UserFullDto;
+import ru.practicum.shareit.user.dto.UserInputDto;
+import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
-import ru.practicum.shareit.user.dto.*;
-import ru.practicum.shareit.user.mapper.UserMapper;
 
 import java.util.List;
 import java.util.Optional;
