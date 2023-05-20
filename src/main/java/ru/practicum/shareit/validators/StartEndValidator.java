@@ -1,6 +1,6 @@
 package ru.practicum.shareit.validators;
 
-import ru.practicum.shareit.booking.dto.BookingInputDto;
+import ru.practicum.shareit.booking.dto.BookingRequestDto;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -8,11 +8,11 @@ import javax.validation.constraintvalidation.SupportedValidationTarget;
 import javax.validation.constraintvalidation.ValidationTarget;
 
 @SupportedValidationTarget(ValidationTarget.ANNOTATED_ELEMENT)
-public class StartEndValidator implements ConstraintValidator<StartEndDate, BookingInputDto> {
+public class StartEndValidator implements ConstraintValidator<StartEndDate, BookingRequestDto> {
 
     @Override
-    public boolean isValid(BookingInputDto bookingInputDto, ConstraintValidatorContext constraintValidatorContext) {
-        return bookingInputDto.getStart().isBefore(bookingInputDto.getEnd()) &&
-                !bookingInputDto.getStart().equals(bookingInputDto.getEnd());
+    public boolean isValid(BookingRequestDto bookingRequestDto, ConstraintValidatorContext constraintValidatorContext) {
+        return bookingRequestDto.getStart().isBefore(bookingRequestDto.getEnd()) &&
+                !bookingRequestDto.getStart().equals(bookingRequestDto.getEnd());
     }
 }
