@@ -12,17 +12,17 @@ public class UserMapper {
                 .build();
     }
 
-    public static User mapToUser(UserDto userDto, User user) {
-        if (userDto.getId() != null) {
-            user.setId(userDto.getId());
+    public static User mapToUser(UserDto userInputDto, User user) {
+        if (userInputDto.getId() != null) {
+            user.setId(userInputDto.getId());
         }
 
-        if (userDto.getName() != null) {
-            user.setName(userDto.getName());
+        if (userInputDto.getName() != null) {
+            user.setName(userInputDto.getName());
         }
 
-        if (userDto.getEmail() != null) {
-            user.setEmail(userDto.getEmail());
+        if (userInputDto.getEmail() != null) {
+            user.setEmail(userInputDto.getEmail());
         }
 
         return user;

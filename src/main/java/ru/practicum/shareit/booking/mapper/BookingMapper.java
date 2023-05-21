@@ -5,7 +5,6 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingItemDto;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.booking.model.BookingForItem;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.user.mapper.UserMapper;
@@ -36,6 +35,7 @@ public class BookingMapper {
                 .status(booking.getStatus())
                 .bookerId(booking.getBooker().getId())
                 .build();
+
     }
 
     public static Booking mapToBooking(BookingRequestDto bookingRequestDto, Booking booking) {
@@ -55,16 +55,4 @@ public class BookingMapper {
         return instant == null ? null : instant.truncatedTo(ChronoUnit.SECONDS);
     }
 
-    public BookingItemDto toBookingItemDto(BookingForItem booking) {
-        if (booking == null) {
-            return null;
-        }
-
-        return BookingItemDto.builder()
-                .bookerId(booking.getBookerId())
-                .start(fromInstant(booking.getStartDate()))
-                .end(fromInstant(booking.getEndDate()))
-                .id(booking.getId())
-                .build();
-    }
 }

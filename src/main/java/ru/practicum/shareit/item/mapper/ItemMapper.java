@@ -1,35 +1,19 @@
 package ru.practicum.shareit.item.mapper;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-import ru.practicum.shareit.booking.mapper.BookingMapper;
-import ru.practicum.shareit.comment.mapper.CommentMapper;
+import ru.practicum.shareit.item.dto.ItemFullDto;
 import ru.practicum.shareit.item.dto.ItemInputDto;
 import ru.practicum.shareit.item.dto.ItemRequestDto;
-import ru.practicum.shareit.item.dto.ItemResponseDto;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.mapper.UserMapper;
 
-@Component
-@RequiredArgsConstructor
 public class ItemMapper {
 
-    static CommentMapper commentMapper;
-    static BookingMapper bookingMapper;
-
-    public static ItemResponseDto mapToItemDto(Item item) {
-        if (item == null) {
-            return null;
-        }
-        return ItemResponseDto.builder()
-                .id(item.getId())
-                .name(item.getName())
-                .description(item.getDescription())
-                .available(item.isAvailable())
-                .owner(item.getOwner())
-                .comments(commentMapper.mapToCommentDtoList(item.getComments()))
-                .lastBooking(bookingMapper.toBookingItemDto(item.getLastBooking()))
-                .nextBooking(bookingMapper.toBookingItemDto(item.getNextBooking()))
-                .build();
+    public static ItemFullDto mapToFullDto(Item item) {
+        return new ItemFullDto(item.getId(),
+                item.getName(),
+                item.getDescription(),
+                item.isAvailable(),
+                UserMapper.mapToFullDto(item.getOwner()));
     }
 
     public static ItemRequestDto mapToRequestDto(Item item) {
@@ -58,4 +42,5 @@ public class ItemMapper {
 
         return item;
     }
+
 }

@@ -1,8 +1,8 @@
 package ru.practicum.shareit.comment.model;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -10,8 +10,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
+@RequiredArgsConstructor
 @Entity
-@Builder(toBuilder = true)
 @EqualsAndHashCode
 @Table(name = "COMMENTS", schema = "PUBLIC")
 public class Comment {
@@ -29,6 +29,6 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "AUTHOR_ID")
     private User author;
-    @Column(name = "CREATED_DATE")
+
     private LocalDateTime created;
 }

@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS PUBLIC.COMMENTS
     TEXT      VARCHAR(1000)                                       NOT NULL,
     ITEM_ID   BIGINT                                              NOT NULL,
     AUTHOR_ID BIGINT                                              NOT NULL,
-    CREATED_DATE   DATETIME                                       NOT NULL,
+    CREATED   TIMESTAMP WITHOUT TIME ZONE                         NOT NULL,
     CONSTRAINT FK_COMMENTS_ITEMS_ID FOREIGN KEY (ITEM_ID) REFERENCES PUBLIC.ITEMS (ID) ON DELETE CASCADE,
     CONSTRAINT FK_COMMENTS_USERS_ID FOREIGN KEY (AUTHOR_ID) REFERENCES PUBLIC.USERS (ID) ON DELETE CASCADE
 );
