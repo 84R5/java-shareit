@@ -1,14 +1,16 @@
 package ru.practicum.shareit.comment.dto;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Value;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Data
-public class CommentInputDto {
+@Value
+@Builder
+public class CommentRequestDto {
 
+    long id;
     @NotNull
-    @NotBlank
-    private String text;
+    @NotBlank String text;
 }
