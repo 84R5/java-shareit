@@ -7,6 +7,7 @@ import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.item.mapper.ItemMapper;
+import ru.practicum.shareit.user.mapper.UserMapper;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -20,6 +21,7 @@ public class BookingMapper {
                 .id(booking.getId())
                 .start(fromInstant(booking.getStart()))
                 .end(fromInstant(booking.getEnd()))
+                .booker(UserMapper.mapToFullDto(booking.getBooker()))
                 .item(ItemMapper.mapToRequestDto(booking.getItem()))
                 .status(booking.getStatus())
                 .build();
