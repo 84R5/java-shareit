@@ -110,19 +110,29 @@ class ItemServiceImpl implements ItemService {
     }
 
     public ItemResponseDto addData(Long userId, Item item) {
+        ItemResponseDto result = ItemMapper.mapToItemDto(item);
 
-        ItemResponseDto.ItemResponseDtoBuilder itemResponseDto = ItemResponseDto.builder();
-        itemResponseDto.id(item.getId()).owner(item.getOwner());
-        if (item.getOwner().getId().equals(userId)) {
-            itemResponseDto.lastBooking(bookingRepository
-                    .findFirstByItemIdAndStartBeforeAndStatusOrderByEndDesc(item.getId(), LocalDateTime.now(), Status.APPROVED)
-                    .map(BookingMapper::mapToRequestDto).orElse(null));
-            itemResponseDto.nextBooking(bookingRepository
-                    .findFirstByItemIdAndStartAfterAndStatusOrderByEndAsc(item.getId(), LocalDateTime.now(), Status.APPROVED)
-                    .map(BookingMapper::mapToRequestDto).orElse(null));
+        if (result.getOwner().getId().equals(userId)) {
+            result.setLastBooking(bookingRepository
+                    .findFirstByItemIdAndStartBeforeAndStatusOrderByEndDesc(result.getId(),
+                            LocalDateTime.now(),
+                            Status.APPROVED)
+                    .map(BookingMapper::mapToRequestDto)
+                    .orElse(null));
+
+            result.setNextBooking(bookingRepository
+                    .findFirstByItemIdAndStartAfterAndStatusOrderByEndAsc(result.getId(),
+                            LocalDateTime.now(),
+                            Status.APPROVED)
+                    .map(BookingMapper::mapToRequestDto)
+                    .orElse(null));
         }
-        itemResponseDto.comments(commentRepository.findAllByItemId(item.getId()).stream().map(CommentMapper::mapToCommentResponseDto).collect(Collectors.toList()));
 
-        return itemResponseDto.build();
+        result.setComments(commentRepository.findAllByItemId(result.getId())
+                .stream()
+                .map(CommentMapper::mapToCommentResponseDto)
+                .collect(Collectors.toList()));
+
+        return result;
     }
 }
