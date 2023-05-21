@@ -13,7 +13,7 @@ public class ItemMapper {
                 item.getName(),
                 item.getDescription(),
                 item.isAvailable(),
-                UserMapper.mapToShortDto(item.getOwner()));
+                UserMapper.mapToFullDto(item.getOwner()));
     }
 
     public static ItemRequestDto mapToRequestDto(Item item) {

@@ -19,6 +19,7 @@ import ru.practicum.shareit.user.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -139,7 +140,7 @@ public class BookingServiceImpl implements BookingService {
         booking.setItem(item);
         booking.setBooker(booker);
         BookingDto result =
-                Optional.of(bookingRepository.save(BookingMapper.mapToBooking(bookingRequestDto, booking)))
+                Optional.of(bookingRepository.save(Objects.requireNonNull(BookingMapper.mapToBooking(bookingRequestDto, booking))))
                         .map(BookingMapper::mapToFullDto)
                         .orElseThrow();
         log.info("Booking {} {} created.", result.getId(), result.getItem().getName());

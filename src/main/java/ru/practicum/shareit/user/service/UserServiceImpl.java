@@ -3,8 +3,7 @@ package ru.practicum.shareit.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.user.dto.UserFullDto;
-import ru.practicum.shareit.user.dto.UserInputDto;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
@@ -21,8 +20,8 @@ class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public List<UserFullDto> getAll() {
-        List<UserFullDto> result = userRepository.findAll()
+    public List<UserDto> getAll() {
+        List<UserDto> result = userRepository.findAll()
                 .stream()
                 .map(UserMapper::mapToFullDto)
                 .collect(Collectors.toList());
@@ -31,8 +30,8 @@ class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserFullDto getById(Long userId) {
-        UserFullDto result = userRepository
+    public UserDto getById(Long userId) {
+        UserDto result = userRepository
                 .findById(userId)
                 .map(UserMapper::mapToFullDto)
                 .orElseThrow(() -> new NullPointerException(String.format("User %d is not found.", userId)));
@@ -41,9 +40,9 @@ class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserFullDto create(UserInputDto userInputDto) {
-        User user = UserMapper.mapToUser(userInputDto, new User());
-        UserFullDto result = Optional.of(userRepository.save(user))
+    public UserDto create(UserDto userDto) {
+        User user = UserMapper.mapToUser(userDto, new User());
+        UserDto result = Optional.of(userRepository.save(user))
                 .map(UserMapper::mapToFullDto)
                 .orElseThrow();
         log.info("User {} {} created.", result.getId(), result.getName());
@@ -51,9 +50,9 @@ class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserFullDto update(UserInputDto userInputDto, Long userId) {
+    public UserDto update(UserDto userDto, Long userId) {
         User oldUser = getUserById(userId);
-        UserFullDto result = Optional.of(userRepository.save(UserMapper.mapToUser(userInputDto, oldUser)))
+        UserDto result = Optional.of(userRepository.save(UserMapper.mapToUser(userDto, oldUser)))
                 .map(UserMapper::mapToFullDto)
                 .orElseThrow(() -> new NullPointerException(String.format("User %d is not found.", userId)));
         log.info("User {} {} updated.", result.getId(), result.getName());
