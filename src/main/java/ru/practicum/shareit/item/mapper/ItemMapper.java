@@ -1,15 +1,18 @@
 package ru.practicum.shareit.item.mapper;
 
-import ru.practicum.shareit.item.dto.ItemFullDto;
+import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemInputDto;
 import ru.practicum.shareit.item.dto.ItemRequestDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.mapper.UserMapper;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+
 public class ItemMapper {
 
-    public static ItemFullDto mapToFullDto(Item item) {
-        return new ItemFullDto(item.getId(),
+    public static ItemDto mapToItemDto(Item item) {
+        return new ItemDto(item.getId(),
                 item.getName(),
                 item.getDescription(),
                 item.isAvailable(),
@@ -23,6 +26,10 @@ public class ItemMapper {
                 .description(item.getDescription())
                 .available(item.isAvailable())
                 .build();
+    }
+
+    public static Collection<ItemDto> mapArrayToItemDto(Collection<Item> items){
+        return items.stream().map(ItemMapper::mapToItemDto).collect(Collectors.toList());
     }
 
 

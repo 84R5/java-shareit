@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class ItemFullDto {
+public class ItemDto {
 
     private Long id;
     private String name;
@@ -22,14 +22,14 @@ public class ItemFullDto {
     private BookingItemDto lastBooking;
     private List<CommentFullDto> comments;
 
-    public ItemFullDto(String name, String description, Boolean available, UserDto owner) {
+    public ItemDto(String name, String description, Boolean available, UserDto owner) {
         this.name = name;
         this.description = description;
         this.available = available;
         this.owner = owner;
     }
 
-    public ItemFullDto(Long id, String name, String description, Boolean available, UserDto owner) {
+    public ItemDto(Long id, String name, String description, Boolean available, UserDto owner) {
         this(name, description, available, owner);
         this.id = id;
     }
