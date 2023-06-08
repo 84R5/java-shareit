@@ -1,7 +1,6 @@
 package ru.practicum.shareit.user.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
@@ -9,22 +8,12 @@ import ru.practicum.shareit.user.service.UserService;
 import javax.validation.Valid;
 import java.util.List;
 
+
 @RestController
 @RequiredArgsConstructor
-@Validated
 @RequestMapping(path = "/users")
 public class UserController {
     private final UserService userService;
-
-    @GetMapping
-    public List<UserDto> getAll() {
-        return userService.getAll();
-    }
-
-    @GetMapping("/{userId}")
-    public UserDto getById(@PathVariable Long userId) {
-        return userService.getById(userId);
-    }
 
     @PostMapping
     public UserDto create(@Valid @RequestBody UserDto userDto) {
@@ -32,12 +21,23 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public UserDto update(@RequestBody UserDto userDto, @PathVariable Long userId) {
-        return userService.update(userDto, userId);
+    public UserDto update(@PathVariable("userId") Long userId,
+                          @RequestBody UserDto userDto) {
+        return userService.update(userId, userDto);
+    }
+
+    @GetMapping
+    public List<UserDto> getUsers() {
+        return userService.getUsers();
+    }
+
+    @GetMapping("/{userId}")
+    public UserDto getUserById(@PathVariable("userId") Long userId) {
+        return userService.getUserById(userId);
     }
 
     @DeleteMapping("/{userId}")
-    public void deleteById(@PathVariable Long userId) {
-        userService.deleteById(userId);
+    public void delete(@PathVariable("userId") Long userId) {
+        userService.delete(userId);
     }
 }

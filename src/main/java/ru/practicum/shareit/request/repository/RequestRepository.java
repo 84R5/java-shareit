@@ -1,18 +1,18 @@
 package ru.practicum.shareit.request.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.request.model.Request;
 
-import java.util.Collection;
+import java.util.List;
 
-@Repository
 public interface RequestRepository extends JpaRepository<Request, Long> {
-    Collection<Request> findAllByRequester_Id(Long userId);
+    Page<Request> findAll(Pageable pageable);
 
-    @Query(" select i from ItemRequest i "+
-    "where i.requester.id <> ?1 "+
-    "order by i.timeCreate")
-    Collection<Request> findAllRequestExceptRequester(Long userId);
+    Page<Request> findByRequesterIdNot(Long userId, Pageable pageable);
+
+    List<Request> findAllByRequesterIdOrderByCreatedAsc(Long userId);
+
+    List<Request> findByRequesterIdNot(Long userId);
 }
