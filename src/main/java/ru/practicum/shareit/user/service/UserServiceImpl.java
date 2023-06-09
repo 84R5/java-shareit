@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
         if (email != null && !email.isBlank()) {
             Optional<User> oUser = userRepository.findByEmail(email);
             if (oUser.isPresent() && !oUser.get().getId().equals(userId)) {
-                throw new IllegalArgumentException("User with email "+email+" already exists");
+                throw new IllegalArgumentException("User with email " + email + " already exists");
             }
             user.setEmail(email);
         }
