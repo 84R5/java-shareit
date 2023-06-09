@@ -35,14 +35,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto update(Long userId, UserDto userDto) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ObjectNotFoundException("User {} not found" + userId));
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new ObjectNotFoundException("User with id = " + userId + " is not found"));
         String name = userDto.getName();
         String email = userDto.getEmail();
         user.setName(name != null && !name.isBlank() ? name : user.getName());
         if (email != null && !email.isBlank()) {
             Optional<User> oUser = userRepository.findByEmail(email);
             if (oUser.isPresent() && !oUser.get().getId().equals(userId)) {
-                throw new IllegalArgumentException("User with email {} already exists" + email);
+                throw new IllegalArgumentException("User with email "+email+" already exists");
             }
             user.setEmail(email);
         }
@@ -52,7 +53,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserById(Long userId) {
         return UserMapper.toUserDto(userRepository.findById(userId).orElseThrow(() ->
-                new ObjectNotFoundException("User {} not found" + userId)));
+                new ObjectNotFoundException("User with id = " + userId + " is not found")));
     }
 
     @Override
@@ -64,7 +65,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Long userId) {
-        userRepository.findById(userId).orElseThrow(() -> new ObjectNotFoundException("User {} not found" + userId));
+        userRepository.findById(userId).orElseThrow(() ->
+                new ObjectNotFoundException("User with id = " + userId + " is not found"));
         userRepository.deleteById(userId);
     }
 }

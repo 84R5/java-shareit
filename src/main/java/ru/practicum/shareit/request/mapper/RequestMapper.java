@@ -5,7 +5,7 @@ import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.user.mapper.UserMapper;
 
 public class RequestMapper {
-    public static Request toItemRequest(RequestDto requestDto) {
+    public static Request toRequest(RequestDto requestDto) {
         return Request.builder()
                 .id(requestDto.getId())
                 .description(requestDto.getDescription())
@@ -14,7 +14,7 @@ public class RequestMapper {
                 .build();
     }
 
-    public static RequestDto toItemRequestDto(Request request) {
+    public static RequestDto toRequestDto(Request request) {
         return RequestDto.builder()
                 .id(request.getId())
                 .description(request.getDescription())
