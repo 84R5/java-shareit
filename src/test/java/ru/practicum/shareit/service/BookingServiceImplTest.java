@@ -105,7 +105,7 @@ class BookingServiceImplTest {
     void create_getBookingsWhisState_addBookings() {
         LocalDateTime start = LocalDateTime.now().minusDays(1);
         LocalDateTime end = LocalDateTime.now().plusDays(2);
-        BookingRequestDto bookingInputDto =BookingRequestDto.builder()
+        BookingRequestDto bookingInputDto = BookingRequestDto.builder()
                 .start(start)
                 .end(end)
                 .itemId(itemDto2.getId())

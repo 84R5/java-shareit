@@ -65,7 +65,7 @@ class UserServiceImplTest {
     void updateUser_shouldUpdateUserEmail() {
         UserDto userDto = initUser();
         User user = UserMapper.toUser(userDto);
-        UserDto uUser= UserDto.builder()
+        UserDto uUser = UserDto.builder()
                 .id(1L)
                 .email("new@email.ru")
                 .build();
@@ -121,6 +121,7 @@ class UserServiceImplTest {
 
         verify(mockUserRepository, times(1)).deleteById(any());
     }
+
     private UserDto initUser() {
         return UserDto.builder()
                 .id(1L)
