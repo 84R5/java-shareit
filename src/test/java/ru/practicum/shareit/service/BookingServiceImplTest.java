@@ -117,7 +117,6 @@ class BookingServiceImplTest {
                 .contains(bookingDto);
     }
 
-
     @Test
     void getBookingsWhisState_returnBookings_addBooking() {
         assertThat(bookingService.getBookingsWhisState(userDto1.getId(), "ALL", 0, 20))
@@ -144,7 +143,7 @@ class BookingServiceImplTest {
         assertThat(bookingService.getBookingsWhisState(userDto1.getId(), "REJECTED", 0, 20))
                 .asList().containsExactly(pastBookingDto);
     }
-    
+
     @Test
     void getBookingsOwner_returnBookings_addBooking() {
         assertThat(bookingService.getBookingsOwner(userDto2.getId(), "ALL", 0, 20))
