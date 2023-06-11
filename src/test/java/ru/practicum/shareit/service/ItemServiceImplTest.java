@@ -87,7 +87,7 @@ class ItemServiceImplTest {
 
         itemInputDto1 = ItemDto.builder().id(item1.getId()).name(item1.getName()).description(item1.getDescription()).available(item1.getAvailable()).build();
 
-        comment = new Comment(1L, "dfseago", item1, user1, LocalDateTime.now());
+        comment = new Comment(1L, "commmmmment", item1, user1, LocalDateTime.now());
         commentInputDto = CommentDto.builder().text(comment.getText()).build();
         pageable = PageRequest.of(1, 20);
         itemFullDto1.setComments(new ArrayList<>());
@@ -168,6 +168,28 @@ class ItemServiceImplTest {
         assertThat(itemService.getItemById(item1.getId())).isEqualTo(item1);
     }
 
+    @Test
+    void getItemByIdFromUser_returnListUser() {
+        when(userService.getUserById(user1.getId()))
+                .thenReturn(UserMapper.toUserDto(user1));
+        when(itemRepository.findById(item1.getId()))
+                .thenReturn(Optional.ofNullable(item1));
+        ItemDtoFull exItemDtoFull = ItemMapper.toItemDtoWithDate(item1);
+        exItemDtoFull.setComments(new ArrayList<>());
+        assertThat(itemService.getItemByIdFromUser(user1.getId(),item1.getId()))
+                .isEqualTo(exItemDtoFull);
+    }
+
+    @Test
+    void getItemsBySearch_returnListItem() {
+        when(userService.getUserById(user1.getId()))
+                .thenReturn(UserMapper.toUserDto(user1));
+        when(itemRepository.searchItems("rpt"))
+                .thenReturn(List.of(item1));
+
+        assertThat(itemService.getItemsBySearch(user1.getId(),"rpt",null,null))
+                .isEqualTo(List.of(ItemMapper.toItemDto(item1)));
+    }
 
     @Test
     void createComment_returnComment_CommentDto() {

@@ -19,25 +19,9 @@ public class BookingMapper {
                 .build();
     }
 
-    /*public static BookingRequestDto toBookingRequestDto(Booking booking) {
-        return new BookingRequestDto(
-                booking.getId(),
-                booking.getStart(),
-                booking.getEnd(),
-                booking.getBooker().getId(),
-                booking.getItem().getId(),
-                booking.getStatus().toString()
-        );
-    }*/
     public static BookingRequestDto toBookingRequestDto(Booking booking) {
-        return BookingRequestDto.builder()
-                .id(booking.getId())
-                .start(booking.getStart())
-                .end(booking.getEnd())
-                .bookerId(booking.getBooker().getId())
-                .itemId(booking.getItem().getId())
-                .status(booking.getStatus().toString())
-                .build();
+        return BookingRequestDto.builder().id(booking.getId()).start(booking.getStart()).end(booking.getEnd())
+                .bookerId(booking.getBooker().getId()).itemId(booking.getItem().getId()).status(booking.getStatus().toString()).build();
     }
 }
 

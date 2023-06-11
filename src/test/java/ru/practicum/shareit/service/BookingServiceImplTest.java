@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.service.BookingService;
-
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -142,6 +141,8 @@ class BookingServiceImplTest {
         pastBookingDto.setStatus("REJECTED");
         assertThat(bookingService.getBookingsWhisState(userDto1.getId(), "REJECTED", 0, 20))
                 .asList().containsExactly(pastBookingDto);
+        assertThat(bookingService.getBookingsWhisState(userDto2.getId(), "CANCELED", 0, 20))
+                .isEqualTo(new ArrayList<>());
     }
 
     @Test
@@ -158,6 +159,8 @@ class BookingServiceImplTest {
         assertThat(bookingService.getBookingsOwner(userDto2.getId(), "FUTURE", 0, 20))
                 .asList().containsExactly(futureBookingDto);
 
+
+
         assertThat(bookingService.getBookingsOwner(userDto2.getId(), "PAST", 0, 20))
                 .asList().containsExactly(pastBookingDto);
 
@@ -168,6 +171,8 @@ class BookingServiceImplTest {
         pastBookingDto.setStatus("REJECTED");
         assertThat(bookingService.getBookingsOwner(userDto2.getId(), "REJECTED", 0, 20))
                 .asList().containsExactly(pastBookingDto);
+        assertThat(bookingService.getBookingsOwner(userDto2.getId(), "CANCELED", 0, 20))
+                .isEqualTo(new ArrayList<>());
     }
 
     @Test

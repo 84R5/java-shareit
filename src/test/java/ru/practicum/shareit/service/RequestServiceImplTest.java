@@ -13,7 +13,6 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 
 import javax.transaction.Transactional;
-
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -84,8 +83,13 @@ class RequestServiceImplTest {
 
     @Test
     void getAllRequestsOthersUser_returnAllRequest() {
-        List<RequestDto> result1 = requestService.getAllRequestsOthersUser(userDto1.getId(),0,20);
+        List<RequestDto> result1 = requestService
+                .getAllRequestsOthersUser(userDto1.getId(),0,20);
+        assertThat(result1).isEqualTo(List.of(requestDto2));
+        List<RequestDto> result2 = requestService
+                .getAllRequestsOthersUser(userDto1.getId(),null,null);
         assertThat(result1).isEqualTo(List.of(requestDto2));
     }
+
 }
 

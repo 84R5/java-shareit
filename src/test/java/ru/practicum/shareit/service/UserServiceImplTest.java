@@ -1,12 +1,10 @@
 package ru.practicum.shareit.service;
 
 import lombok.RequiredArgsConstructor;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.practicum.shareit.exception.ObjectNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -23,8 +21,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -40,7 +37,7 @@ class UserServiceImplTest {
     void createUser_shouldCreateAUser() {
         UserDto userDto = initUser();
         User user = UserMapper.toUser(userDto);
-        Mockito.when(mockUserRepository.save(user)).thenReturn(user);
+        when(mockUserRepository.save(user)).thenReturn(user);
 
         assertEquals(userDto, service.create(userDto));
         verify(mockUserRepository, times(1)).save(any());
@@ -54,8 +51,8 @@ class UserServiceImplTest {
                 .name("Max")
                 .build();
         User user = UserMapper.toUser(userDto);
-        Mockito.when(mockUserRepository.save(user)).thenReturn(user);
-        Mockito.when(mockUserRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(mockUserRepository.save(user)).thenReturn(user);
+        when(mockUserRepository.findById(1L)).thenReturn(Optional.of(user));
 
         userDto.setName("Max");
 
@@ -70,8 +67,8 @@ class UserServiceImplTest {
                 .id(1L)
                 .email("new@email.ru")
                 .build();
-        Mockito.when(mockUserRepository.save(user)).thenReturn(user);
-        Mockito.when(mockUserRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(mockUserRepository.save(user)).thenReturn(user);
+        when(mockUserRepository.findById(1L)).thenReturn(Optional.of(user));
 
         userDto.setEmail("new@email.ru");
 
@@ -82,8 +79,8 @@ class UserServiceImplTest {
     void getUserById_shouldReturnUserById() {
         UserDto userDto = initUser();
         User user = UserMapper.toUser(userDto);
-        Mockito.when(mockUserRepository.save(user)).thenReturn(user);
-        Mockito.when(mockUserRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(mockUserRepository.save(user)).thenReturn(user);
+        when(mockUserRepository.findById(1L)).thenReturn(Optional.of(user));
 
         assertEquals(userDto, service.update(userDto.getId(),userDto));
         verify(mockUserRepository, times(1)).findById(any());
@@ -91,10 +88,10 @@ class UserServiceImplTest {
 
     @Test
     void getUserById_shouldThrowIfUserDoesNotExists() {
+        when(mockUserRepository.findById(any())).thenReturn(Optional.empty());
 
-        Mockito.when(mockUserRepository.findById(any())).thenReturn(Optional.empty());
-
-        ObjectNotFoundException exception = assertThrows(ObjectNotFoundException.class, () -> service.getUserById(1L));
+        ObjectNotFoundException exception = assertThrows(ObjectNotFoundException.class, () ->
+                service.getUserById(1L));
         assertEquals("User with id = 1 is not found", exception.getMessage());
     }
 
@@ -107,7 +104,7 @@ class UserServiceImplTest {
                 .email("new@mail.ru")
                 .build();
         List<User> users = Stream.of(user1,user2).map(UserMapper::toUser).collect(Collectors.toList());
-        Mockito.when(mockUserRepository.findAll()).thenReturn(users);
+        when(mockUserRepository.findAll()).thenReturn(users);
 
         assertEquals(List.of(user1, user2), service.getUsers());
         verify(mockUserRepository, times(1)).findAll();
@@ -117,10 +114,10 @@ class UserServiceImplTest {
     void removeUserById_shouldRemoveUser() {
         UserDto userDto = initUser();
         User user = UserMapper.toUser(userDto);
-        Mockito.when(mockUserRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(mockUserRepository.findById(1L)).thenReturn(Optional.of(user));
         service.delete(1L);
-
         verify(mockUserRepository, times(1)).deleteById(any());
+
     }
 
     private UserDto initUser() {
