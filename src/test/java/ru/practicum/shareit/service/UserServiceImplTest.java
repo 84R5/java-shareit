@@ -56,7 +56,7 @@ class UserServiceImplTest {
 
         userDto.setName("Max");
 
-        assertEquals(userDto, service.update(uUser.getId(),uUser));
+        assertEquals(userDto, service.update(uUser.getId(), uUser));
     }
 
     @Test
@@ -72,7 +72,7 @@ class UserServiceImplTest {
 
         userDto.setEmail("new@email.ru");
 
-        assertEquals(userDto, service.update(uUser.getId(),uUser));
+        assertEquals(userDto, service.update(uUser.getId(), uUser));
     }
 
     @Test
@@ -82,7 +82,7 @@ class UserServiceImplTest {
         when(mockUserRepository.save(user)).thenReturn(user);
         when(mockUserRepository.findById(1L)).thenReturn(Optional.of(user));
 
-        assertEquals(userDto, service.update(userDto.getId(),userDto));
+        assertEquals(userDto, service.update(userDto.getId(), userDto));
         verify(mockUserRepository, times(1)).findById(any());
     }
 
@@ -103,7 +103,7 @@ class UserServiceImplTest {
                 .name("Leon")
                 .email("new@mail.ru")
                 .build();
-        List<User> users = Stream.of(user1,user2).map(UserMapper::toUser).collect(Collectors.toList());
+        List<User> users = Stream.of(user1, user2).map(UserMapper::toUser).collect(Collectors.toList());
         when(mockUserRepository.findAll()).thenReturn(users);
 
         assertEquals(List.of(user1, user2), service.getUsers());

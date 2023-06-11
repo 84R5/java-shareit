@@ -122,7 +122,7 @@ class BookingServiceImplTest {
                 .asList().containsExactly(futureBookingDto, pastBookingDto);
 
         assertThat(bookingService.getBookingsWhisState(userDto2.getId(), "ALL", 0, 20))
-                .asList().containsExactly(waitingBookingDto, rejectedBookingDto,currentBookingDto);
+                .asList().containsExactly(waitingBookingDto, rejectedBookingDto, currentBookingDto);
 
         assertThat(bookingService.getBookingsWhisState(userDto2.getId(), "CURRENT", 0, 20))
                 .asList().containsExactly(currentBookingDto);
@@ -151,14 +151,13 @@ class BookingServiceImplTest {
                 .asList().containsExactly(futureBookingDto, pastBookingDto);
 
         assertThat(bookingService.getBookingsOwner(userDto1.getId(), "ALL", 0, 20))
-                .asList().containsExactly(waitingBookingDto, rejectedBookingDto,currentBookingDto);
+                .asList().containsExactly(waitingBookingDto, rejectedBookingDto, currentBookingDto);
 
         assertThat(bookingService.getBookingsOwner(userDto1.getId(), "CURRENT", 0, 20))
                 .asList().containsExactly(currentBookingDto);
 
         assertThat(bookingService.getBookingsOwner(userDto2.getId(), "FUTURE", 0, 20))
                 .asList().containsExactly(futureBookingDto);
-
 
 
         assertThat(bookingService.getBookingsOwner(userDto2.getId(), "PAST", 0, 20))
@@ -181,7 +180,7 @@ class BookingServiceImplTest {
                 .isEqualTo(currentBookingDto);
     }
 
-   @Test
+    @Test
     void update_returnUpdateAndRejected_addWaiting() {
         assertThat(bookingService.getBookingById(userDto1.getId(), currentBookingDto.getId()))
                 .hasFieldOrPropertyWithValue("status", "WAITING");

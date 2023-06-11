@@ -46,6 +46,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class ItemServiceImplTest {
 
+    Pageable pageable;
     @Mock
     private ItemRepository itemRepository;
     @Mock
@@ -56,26 +57,18 @@ class ItemServiceImplTest {
     private BookingRepository bookingRepository;
     @Mock
     private CommentRepository commentRepository;
-
     @Mock
     private RequestRepository requestRepository;
-
     @Mock
     private Pagination pagination;
-
     @InjectMocks
     private ItemServiceImpl itemService;
-
     private User user1;
     private Item item1;
     private Request request;
     private ItemDto itemInputDto1;
     private Comment comment;
     private CommentDto commentInputDto;
-
-
-    Pageable pageable;
-
 
     @BeforeEach
     void beforeEach() {
@@ -134,7 +127,7 @@ class ItemServiceImplTest {
 
         assertThat(itemService.getItemsByOwner(1L, 1, 10)).isEqualTo(List.of(itemDtoFull));
         when(itemRepository.findByOwner(user1)).thenReturn(List.of(item1));
-        assertThat(itemService.getItemsByOwner(1L,null,null)).isEqualTo(List.of((itemDtoFull)));
+        assertThat(itemService.getItemsByOwner(1L, null, null)).isEqualTo(List.of((itemDtoFull)));
     }
 
     @Test
@@ -176,7 +169,7 @@ class ItemServiceImplTest {
                 .thenReturn(Optional.ofNullable(item1));
         ItemDtoFull exItemDtoFull = ItemMapper.toItemDtoWithDate(item1);
         exItemDtoFull.setComments(new ArrayList<>());
-        assertThat(itemService.getItemByIdFromUser(user1.getId(),item1.getId()))
+        assertThat(itemService.getItemByIdFromUser(user1.getId(), item1.getId()))
                 .isEqualTo(exItemDtoFull);
     }
 
@@ -187,7 +180,7 @@ class ItemServiceImplTest {
         when(itemRepository.searchItems("rpt"))
                 .thenReturn(List.of(item1));
 
-        assertThat(itemService.getItemsBySearch(user1.getId(),"rpt",null,null))
+        assertThat(itemService.getItemsBySearch(user1.getId(), "rpt", null, null))
                 .isEqualTo(List.of(ItemMapper.toItemDto(item1)));
     }
 

@@ -22,19 +22,18 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 class RequestServiceImplTest {
 
+    ItemDto itemDto1;
+    ItemDto itemDto2;
     @Autowired
     private ItemService itemService;
     @Autowired
     private UserService userService;
     @Autowired
     private RequestService requestService;
-
     private UserDto userDto1;
     private UserDto userDto2;
     private RequestDto requestDto1;
     private RequestDto requestDto2;
-    ItemDto itemDto1;
-    ItemDto itemDto2;
 
     @BeforeEach
     void beforeEach() {
@@ -84,10 +83,10 @@ class RequestServiceImplTest {
     @Test
     void getAllRequestsOthersUser_returnAllRequest() {
         List<RequestDto> result1 = requestService
-                .getAllRequestsOthersUser(userDto1.getId(),0,20);
+                .getAllRequestsOthersUser(userDto1.getId(), 0, 20);
         assertThat(result1).isEqualTo(List.of(requestDto2));
         List<RequestDto> result2 = requestService
-                .getAllRequestsOthersUser(userDto1.getId(),null,null);
+                .getAllRequestsOthersUser(userDto1.getId(), null, null);
         assertThat(result1).isEqualTo(List.of(requestDto2));
     }
 
