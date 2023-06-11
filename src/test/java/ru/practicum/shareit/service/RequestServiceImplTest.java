@@ -81,5 +81,11 @@ class RequestServiceImplTest {
         assertThat(result2.size()).isEqualTo(1);
         assertThat(result2.get(0)).isEqualTo(requestDto2);
     }
+
+    @Test
+    void getAllRequestsOthersUser_returnAllRequest(){
+        List<RequestDto> result1 = requestService.getAllRequestsOthersUser(userDto1.getId(),0,20);
+        assertThat(result1).isEqualTo(List.of(requestDto2));
+    }
 }
 

@@ -133,6 +133,8 @@ class ItemServiceImplTest {
         when(userService.getUserById(1L)).thenReturn(u);
 
         assertThat(itemService.getItemsByOwner(1L, 1, 10)).isEqualTo(List.of(itemDtoFull));
+        when(itemRepository.findByOwner(user1)).thenReturn(List.of(item1));
+        assertThat(itemService.getItemsByOwner(1L,null,null)).isEqualTo(List.of((itemDtoFull)));
     }
 
     @Test
