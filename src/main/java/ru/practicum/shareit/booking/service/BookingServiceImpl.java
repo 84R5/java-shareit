@@ -19,6 +19,7 @@ import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.user.service.UserServiceImpl;
 import ru.practicum.shareit.util.Pagination;
 
 import java.time.Clock;
@@ -37,11 +38,13 @@ public class BookingServiceImpl implements BookingService {
     private final Pagination pagination;
     private final BookingRepository bookingRepository;
     private final UserService userService;
+
+    private final UserServiceImpl userServiceImpl;
     private final ItemService itemService;
 
     @Override
     public BookingDto create(Long userId, BookingRequestDto bookingRequestDto) {
-        User booker = UserMapper.toUser(userService.getUserById(userId));
+        User booker = UserMapper.toUser(userServiceImpl.getUserById(userId));
         Item item = itemService.getItemById(bookingRequestDto.getItemId());
         if (!item.getAvailable()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Item is not available.");

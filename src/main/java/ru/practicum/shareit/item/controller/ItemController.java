@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemDtoWithDate;
+import ru.practicum.shareit.item.dto.ItemDtoFull;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
@@ -41,9 +41,9 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDtoWithDate> getItemsByOwner(@RequestHeader(HEADER) Long ownerId,
-                                                 @PositiveOrZero @RequestParam(value = "from", defaultValue = "0") Integer from,
-                                                 @Positive @RequestParam(value = "size", defaultValue = "10") Integer size) {
+    public List<ItemDtoFull> getItemsByOwner(@RequestHeader(HEADER) Long ownerId,
+                                             @PositiveOrZero @RequestParam(value = "from", defaultValue = "0") Integer from,
+                                             @Positive @RequestParam(value = "size", defaultValue = "10") Integer size) {
         log.info("Получен GET-запрос к эндпоинту: '/items' на получение всех вещей владельца с ID={}", ownerId);
         return itemService.getItemsByOwner(ownerId, from, size);
     }
@@ -58,8 +58,8 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDtoWithDate getItemByIdFromUser(@RequestHeader(HEADER) Long userId,
-                                               @PathVariable("itemId") Long itemId) {
+    public ItemDtoFull getItemByIdFromUser(@RequestHeader(HEADER) Long userId,
+                                           @PathVariable("itemId") Long itemId) {
         log.info("Получен GET-запрос к эндпоинту: '/items' на получение вещи с ID={}", itemId);
         return itemService.getItemByIdFromUser(userId, itemId);
     }

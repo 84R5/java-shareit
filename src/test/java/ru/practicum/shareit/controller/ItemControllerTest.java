@@ -11,7 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.item.controller.ItemController;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemDtoWithDate;
+import ru.practicum.shareit.item.dto.ItemDtoFull;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.dto.UserDto;
 
@@ -48,15 +48,15 @@ class ItemControllerTest {
                 .email("a@ya.ru")
                 .build();
 
-        List<ItemDtoWithDate> items = Arrays.asList(
-                ItemDtoWithDate.builder()
+        List<ItemDtoFull> items = Arrays.asList(
+                ItemDtoFull.builder()
                         .id(1L)
                         .name("First")
                         .description("item 1")
                         .available(true)
                         .owner(userDto)
                         .build(),
-                ItemDtoWithDate.builder()
+                ItemDtoFull.builder()
                         .id(2L)
                         .name("Second")
                         .description("item 2")
@@ -87,7 +87,7 @@ class ItemControllerTest {
                 .name("Lex")
                 .email("a@ya.ru")
                 .build();
-        ItemDtoWithDate item = ItemDtoWithDate.builder()
+        ItemDtoFull item = ItemDtoFull.builder()
                 .id(itemId)
                 .name("First")
                 .description("item 1")

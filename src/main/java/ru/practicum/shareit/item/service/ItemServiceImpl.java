@@ -17,7 +17,7 @@ import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.ObjectNotFoundException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemDtoWithDate;
+import ru.practicum.shareit.item.dto.ItemDtoFull;
 import ru.practicum.shareit.item.mapper.CommentMapper;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Comment;
@@ -32,8 +32,10 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.util.Pagination;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,6 +58,8 @@ public class ItemServiceImpl implements ItemService {
 
     RequestRepository requestRepository;
 
+    Pagination pagination;
+
     @Override
     public ItemDto create(Long userId, ItemDto itemDto) {
         User owner = UserMapper.toUser(userService.getUserById(userId));
@@ -74,7 +78,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDtoWithDate> getItemsByOwner(Long userId, Integer from, Integer size) {
+    public List<ItemDtoFull> getItemsByOwner(Long userId, Integer from, Integer size) {
         User owner = UserMapper.toUser(userService.getUserById(userId));
 
         if (from != null && size != null) {
@@ -154,7 +158,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDtoWithDate getItemByIdFromUser(Long userId, Long itemId) {
+    public ItemDtoFull getItemByIdFromUser(Long userId, Long itemId) {
         userService.getUserById(userId);
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new ObjectNotFoundException(String.format("Item %s not found.", itemId)));
 
@@ -171,12 +175,12 @@ public class ItemServiceImpl implements ItemService {
                 .map(CommentMapper::toCommentDto)
                 .collect(Collectors.toList());
 
-        ItemDtoWithDate itemDtoWithDate = ItemMapper.toItemDtoWithDate(item);
-        itemDtoWithDate.setLastBooking(lastBooking);
-        itemDtoWithDate.setNextBooking(nextBooking);
-        itemDtoWithDate.setComments(comments);
+        ItemDtoFull itemDtoFull = ItemMapper.toItemDtoWithDate(item);
+        itemDtoFull.setLastBooking(lastBooking);
+        itemDtoFull.setNextBooking(nextBooking);
+        itemDtoFull.setComments(comments);
 
-        return itemDtoWithDate;
+        return itemDtoFull;
     }
 
     @Override
@@ -185,14 +189,10 @@ public class ItemServiceImpl implements ItemService {
         if (text == null || text.isBlank()) {
             return new ArrayList<>();
         }
-        if (from != null && size != null) {
-            if (from < 0 || size <= 0) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong request.");
-            }
-            int pageNumber = (int) Math.ceil((double) from / size);
-            Pageable pageable = PageRequest.of(pageNumber, size);
 
-            return itemRepository.searchItems(text, pageable)
+
+        if (from != null && size != null) {
+            return itemRepository.searchItems(text, pagination.getPage(from, size))
                     .stream()
                     .filter(Item::getAvailable)
                     .map(ItemMapper::toItemDto)
@@ -208,7 +208,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Item getItemById(Long itemId) {
-        return itemRepository.findById(itemId).orElseThrow(() -> new ObjectNotFoundException(String.format("Item %s not found.", itemId)));
+        return itemRepository.findById(itemId).orElseThrow(() ->
+                new ObjectNotFoundException(String.format("Item %s not found.", itemId)));
     }
 
     @Override
@@ -219,7 +220,7 @@ public class ItemServiceImpl implements ItemService {
         if (existingComment != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You already commented this item.");
         }
-        List<Booking> bookings = bookingRepository.findBookingByItemIdAndBookerIdAndStatusAndEndBefore(itemId, userId, Status.APPROVED, LocalDateTime.now());
+        List<Booking> bookings = bookingRepository.findBookingByItemIdAndBookerIdAndStatusAndEndBefore(itemId, userId, Status.APPROVED, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
 
         if (bookings.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can't comment.");

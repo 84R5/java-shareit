@@ -61,7 +61,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ItemDtoWithDate {
+public class ItemDtoFull {
     Long id;
     @NotEmpty
     String name;
