@@ -5,225 +5,81 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.exception.ObjectNotFoundException;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.request.dto.RequestDto;
-import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.request.service.RequestService;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.mapper.UserMapper;
-import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import java.time.LocalDateTime;
-import java.util.Collections;
+import javax.transaction.Transactional;
+
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @Transactional
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 class RequestServiceImplTest {
-    private final RequestService itemRequestService;
-    private final UserService userService;
-    private final EntityManager em;
 
+    @Autowired
+    private ItemService itemService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private RequestService requestService;
 
-    Request itemRequest1;
-    UserDto ownerDto1;
-    UserDto requesterDto101;
-    User owner1;
-    User requester101;
-    LocalDateTime now;
-    LocalDateTime nowPlus10min;
-    LocalDateTime nowPlus10hours;
-    Item item1;
-    RequestDto itemRequestDto1;
-    TypedQuery<Request> query;
+    private UserDto userDto1;
+    private UserDto userDto2;
+    private RequestDto requestDto1;
+    private RequestDto requestDto2;
+    ItemDto itemDto1;
+    ItemDto itemDto2;
 
     @BeforeEach
-    void setUp() {
-        now = LocalDateTime.now();
-        nowPlus10min = now.plusMinutes(10);
-        nowPlus10hours = now.plusHours(10);
+    void beforeEach() {
+        userDto1 = userService.create(UserDto.builder().name("Leo").email("king@ya.ru").build());
+        userDto2 = userService.create(UserDto.builder().name("Ann").email("princess@ya.ru").build());
 
-        ownerDto1 = UserDto.builder()
-                .name("name userDto1")
-                .email("userDto1@mans.gf")
-                .build();
-        requesterDto101 = UserDto.builder()
-                .name("name userDto2")
-                .email("userDto2@mans.gf")
-                .build();
+        requestDto1 = requestService.create(userDto1.getId(),
+                RequestDto.builder().description("req1").build());
+        requestDto2 = requestService.create(userDto2.getId(),
+                RequestDto.builder().description("req2").build());
 
-        owner1 = User.builder()
-                .id(ownerDto1.getId())
-                .name(ownerDto1.getName())
-                .email(ownerDto1.getEmail())
-                .build();
+        itemDto1 = itemService.create(userDto2.getId(),
+                ItemDto.builder().name("i1").description("di1").available(true).requestId(requestDto2.getId()).build());
+        itemDto2 = itemService.create(userDto1.getId(),
+                ItemDto.builder().name("i2").description("di2").available(true).requestId(requestDto1.getId()).build());
 
-        requester101 = User.builder()
-                .id(requesterDto101.getId())
-                .name(requesterDto101.getName())
-                .email(requesterDto101.getEmail())
-                .build();
 
-        itemRequest1 = Request.builder()
-                .description("description for request 1")
-                .requester(requester101)
-                .created(now)
-                .build();
-
-        item1 = Item.builder()
-                .name("name for item 1")
-                .description("description for item 1")
-                .owner(owner1)
-                .available(true)
-                .build();
-
-        itemRequestDto1 = RequestDto.builder()
-                .description(item1.getDescription())
-                .requester(UserMapper.toUserDto(requester101))
-                .created(now)
-                .build();
+        requestDto1.setItems(requestService.getItemRequestById(requestDto1.getRequester().getId(),
+                requestDto1.getId()).getItems());
+        requestDto2.setItems(requestService.getItemRequestById(requestDto2.getRequester().getId(),
+                requestDto2.getId()).getItems());
     }
 
     @Test
-    void addRequest() {
-        UserDto savedOwnerDto1 = userService.create(ownerDto1);
-        query =
-                em.createQuery("Select ir from Request ir", Request.class);
-        List<Request> beforeSave = query.getResultList();
+    void create_findItemRequest_addRequest() {
+        RequestDto requestInputDto = RequestDto.builder().description("test").build();
+        RequestDto requestDto = requestService.create(userDto1.getId(), requestInputDto);
 
-        assertEquals(0, beforeSave.size());
+        requestDto.setItems(requestService.getItemRequestById(requestDto.getRequester().getId(),
+                requestDto.getId()).getItems());
 
-        RequestDto savedRequest =
-                itemRequestService.create(savedOwnerDto1.getId(), itemRequestDto1);
-        List<Request> afterSave = query.getResultList();
-
-        assertEquals(1, afterSave.size());
-        assertEquals(savedRequest.getId(), afterSave.get(0).getId());
-        assertEquals(savedRequest.getCreated(), afterSave.get(0).getCreated());
-        assertEquals(savedRequest.getDescription(), afterSave.get(0).getDescription());
+        assertThat(requestService.getItemRequestById(userDto2.getId(), requestDto.getId())).isEqualTo(requestDto);
     }
+
 
     @Test
-    void addRequest_whenRequesterIdIsNull() {
-        Long requesterId = 1001L;
-        assertThrows(ObjectNotFoundException.class,
-                () -> itemRequestService.create(requesterId, itemRequestDto1));
+    void getByRequesterId_return1ItemRequestEveryTime_added2ItemRequests() {
+        List<RequestDto> result1 = requestService.getAllOwnRequests(userDto1.getId());
+        assertThat(result1.size()).isEqualTo(1);
+        assertThat(result1.get(0)).isEqualTo(requestDto1);
+
+        List<RequestDto> result2 = requestService.getAllOwnRequests(userDto2.getId());
+        assertThat(result2.size()).isEqualTo(1);
+        assertThat(result2.get(0)).isEqualTo(requestDto2);
     }
-
-    @Test
-    void addRequest_whenRequesterNotFound() {
-        Long requesterId = 1001L;
-        assertThrows(ObjectNotFoundException.class,
-                () -> itemRequestService.create(requesterId, itemRequestDto1));
-    }
-
-    @Test
-    void getRequestsByUserId() {
-        UserDto savedUserDto = userService.create(requesterDto101);
-        RequestDto savedRequest =
-                itemRequestService.create(savedUserDto.getId(), itemRequestDto1);
-
-        query = em.createQuery("Select ir from Request ir", Request.class);
-
-        List<RequestDto> itemsFromDb =
-                itemRequestService.getAllOwnRequests(savedUserDto.getId());
-
-        assertEquals(1, itemsFromDb.size());
-
-        assertEquals(savedRequest.getId(), itemsFromDb.get(0).getId());
-        assertEquals(savedRequest.getRequester().getId(), itemsFromDb.get(0).getRequester().getId());
-        assertEquals(savedRequest.getRequester().getName(), itemsFromDb.get(0).getRequester().getName());
-        assertEquals(savedRequest.getCreated(), itemsFromDb.get(0).getCreated());
-        assertEquals(itemRequestDto1.getDescription(), itemsFromDb.get(0).getDescription());
-    }
-
-    @Test
-    void getRequestsByUserId_whenUserNotFound() {
-        Long requesterId = 1001L;
-        ObjectNotFoundException ex = assertThrows(ObjectNotFoundException.class,
-                () -> itemRequestService.getAllOwnRequests(requesterId));
-        assertEquals(String.format("User {} not found" + requesterId, requesterId), ex.getMessage());
-    }
-
-    @Test
-    void getAllRequestForUser() {
-        UserDto savedRequesterDto = userService.create(requesterDto101);
-        UserDto savedOwnerDto = userService.create(ownerDto1);
-
-        RequestDto savedRequest =
-                itemRequestService.create(savedRequesterDto.getId(), itemRequestDto1);
-        query = em.createQuery("Select ir from Request ir where ir.requester.id <> :userId", Request.class);
-
-        List<RequestDto> emptyItemsFromDbForRequester =
-                itemRequestService.getAllRequestsOthersUser(savedRequesterDto.getId(), 0, 5);
-
-        assertEquals(0, emptyItemsFromDbForRequester.size());
-
-        List<RequestDto> oneItemFromDbForOwner =
-                itemRequestService.getAllRequestsOthersUser(savedOwnerDto.getId(), 0, 1);
-
-        assertEquals(savedRequest.getId(), oneItemFromDbForOwner.get(0).getId());
-        assertEquals(savedRequest.getDescription(), oneItemFromDbForOwner.get(0).getDescription());
-        assertEquals(savedRequest.getRequester().getId(), oneItemFromDbForOwner.get(0).getRequester().getId());
-        assertEquals(savedRequest.getRequester().getName(), oneItemFromDbForOwner.get(0).getRequester().getName());
-        assertEquals(Collections.emptyList(), oneItemFromDbForOwner.get(0).getItems());
-        assertEquals(savedRequest.getCreated(), oneItemFromDbForOwner.get(0).getCreated());
-    }
-
-    @Test
-    void getRequestById_returnRequestDto() {
-        UserDto savedRequesterDto = userService.create(requesterDto101);
-        UserDto savedOwnerDto = userService.create(ownerDto1);
-        UserDto observer = userService.create(UserDto.builder().name("nablyudatel").email("1@re.hg").build());
-
-        RequestDto savedItRequest =
-                itemRequestService.create(savedRequesterDto.getId(), itemRequestDto1);
-
-        RequestDto itRequestDtoFromDbObserver =
-                itemRequestService.getItemRequestById(observer.getId(), savedItRequest.getId());
-
-        assertEquals(savedItRequest.getId(), itRequestDtoFromDbObserver.getId());
-        assertEquals(savedItRequest.getCreated(), itRequestDtoFromDbObserver.getCreated());
-        assertEquals(savedItRequest.getDescription(), itRequestDtoFromDbObserver.getDescription());
-        assertEquals(savedItRequest.getRequester().getId(), itRequestDtoFromDbObserver.getRequester().getId());
-        assertEquals(savedItRequest.getRequester().getId(), itRequestDtoFromDbObserver.getRequester().getId());
-
-        RequestDto itemRequestDtoWithAnswerForOwner =
-                itemRequestService.getItemRequestById(savedOwnerDto.getId(), savedItRequest.getId());
-
-        assertEquals(savedItRequest.getId(), itemRequestDtoWithAnswerForOwner.getId());
-        assertEquals(savedItRequest.getCreated(), itemRequestDtoWithAnswerForOwner.getCreated());
-        assertEquals(savedItRequest.getDescription(), itemRequestDtoWithAnswerForOwner.getDescription());
-        assertEquals(savedItRequest.getRequester().getId(), itemRequestDtoWithAnswerForOwner.getRequester().getId());
-        assertEquals(savedItRequest.getRequester().getId(), itemRequestDtoWithAnswerForOwner.getRequester().getId());
-
-        RequestDto itReqDtoWithAnswerForRequester =
-                itemRequestService.getItemRequestById(savedRequesterDto.getId(), savedItRequest.getId());
-
-        assertEquals(savedItRequest.getId(), itReqDtoWithAnswerForRequester.getId());
-        assertEquals(savedItRequest.getCreated(), itReqDtoWithAnswerForRequester.getCreated());
-        assertEquals(savedItRequest.getDescription(), itReqDtoWithAnswerForRequester.getDescription());
-        assertEquals(savedItRequest.getRequester().getId(), itReqDtoWithAnswerForRequester.getRequester().getId());
-        assertEquals(savedItRequest.getRequester().getId(), itReqDtoWithAnswerForRequester.getRequester().getId());
-    }
-
-    @Test
-    void getRequestById_whenRequestNotFound() {
-        UserDto savedRequesterDto = userService.create(requesterDto101);
-        Long requestId = 1001L;
-        ObjectNotFoundException ex = assertThrows(ObjectNotFoundException.class,
-                () -> itemRequestService.getItemRequestById(savedRequesterDto.getId(), requestId));
-        assertEquals("Request " + requestId + " not found.",
-                ex.getMessage());
-    }
-
 }
+

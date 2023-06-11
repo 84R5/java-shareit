@@ -45,14 +45,14 @@ class UserServiceImplTest {
         verify(mockUserRepository, times(1)).save(any());
     }
 
-   @Test
+    @Test
     void updateUser_shouldUpdateUserName() {
         UserDto userDto = initUser();
         UserDto uUser = UserDto.builder()
                 .id(1L)
                 .name("Max")
                 .build();
-       User user = UserMapper.toUser(userDto);
+        User user = UserMapper.toUser(userDto);
         Mockito.when(mockUserRepository.save(user)).thenReturn(user);
         Mockito.when(mockUserRepository.findById(1L)).thenReturn(Optional.of(user));
 
