@@ -76,7 +76,7 @@ class ItemServiceImplTest {
         User user2 = new User(2L, "Faradgo", "gossds@dgodssads.ru");
         request = new Request(1L, "dscrptn", user2, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         item1 = new Item(1L, "Sam", "dscrptn", true, user1, request);
-        ItemDtoFull itemFullDto1 = ItemMapper.toItemDtoWithDate(item1);
+        ItemDtoFull itemFullDto1 = ItemMapper.toItemDtoFull(item1);
 
         itemInputDto1 = ItemDto.builder().id(item1.getId()).name(item1.getName()).description(item1.getDescription()).available(item1.getAvailable()).build();
 
@@ -121,7 +121,7 @@ class ItemServiceImplTest {
     @Test
     void getItemsByOwner_returnItem1() {
         UserDto u = UserMapper.toUserDto(user1);
-        ItemDtoFull itemDtoFull = ItemMapper.toItemDtoWithDate(item1);
+        ItemDtoFull itemDtoFull = ItemMapper.toItemDtoFull(item1);
         when(itemRepository.findByOwner(user1, PageRequest.of(1, 10))).thenReturn(List.of(item1));
         when(userService.getUserById(1L)).thenReturn(u);
 
@@ -167,7 +167,7 @@ class ItemServiceImplTest {
                 .thenReturn(UserMapper.toUserDto(user1));
         when(itemRepository.findById(item1.getId()))
                 .thenReturn(Optional.ofNullable(item1));
-        ItemDtoFull exItemDtoFull = ItemMapper.toItemDtoWithDate(item1);
+        ItemDtoFull exItemDtoFull = ItemMapper.toItemDtoFull(item1);
         exItemDtoFull.setComments(new ArrayList<>());
         assertThat(itemService.getItemByIdFromUser(user1.getId(), item1.getId()))
                 .isEqualTo(exItemDtoFull);

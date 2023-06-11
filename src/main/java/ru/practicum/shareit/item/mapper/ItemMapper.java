@@ -29,7 +29,7 @@ public class ItemMapper {
                 .build();
     }
 
-    public static ItemDtoFull toItemDtoWithDate(Item item) {
+    public static ItemDtoFull toItemDtoFull(Item item) {
         return ItemDtoFull.builder()
                 .id(item.getId())
                 .name(item.getName())
