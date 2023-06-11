@@ -83,7 +83,7 @@ class RequestServiceImplTest {
     }
 
     @Test
-    void getAllRequestsOthersUser_returnAllRequest(){
+    void getAllRequestsOthersUser_returnAllRequest() {
         List<RequestDto> result1 = requestService.getAllRequestsOthersUser(userDto1.getId(),0,20);
         assertThat(result1).isEqualTo(List.of(requestDto2));
     }
