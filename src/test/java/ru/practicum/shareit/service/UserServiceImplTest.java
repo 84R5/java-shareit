@@ -17,6 +17,7 @@ import ru.practicum.shareit.user.service.UserServiceImpl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -105,7 +106,7 @@ class UserServiceImplTest {
                 .name("Leon")
                 .email("new@mail.ru")
                 .build();
-        List<User> users = Stream.of(user1,user2).map(UserMapper::toUser).toList();
+        List<User> users = Stream.of(user1,user2).map(UserMapper::toUser).collect(Collectors.toList());
         Mockito.when(mockUserRepository.findAll()).thenReturn(users);
 
         assertEquals(List.of(user1, user2), service.getUsers());
