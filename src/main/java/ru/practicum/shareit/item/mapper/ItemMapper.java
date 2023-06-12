@@ -1,46 +1,42 @@
 package ru.practicum.shareit.item.mapper;
 
-import ru.practicum.shareit.item.dto.ItemFullDto;
-import ru.practicum.shareit.item.dto.ItemInputDto;
-import ru.practicum.shareit.item.dto.ItemRequestDto;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemDtoFull;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.mapper.RequestMapper;
 import ru.practicum.shareit.user.mapper.UserMapper;
 
 public class ItemMapper {
 
-    public static ItemFullDto mapToFullDto(Item item) {
-        return new ItemFullDto(item.getId(),
-                item.getName(),
-                item.getDescription(),
-                item.isAvailable(),
-                UserMapper.mapToFullDto(item.getOwner()));
-    }
-
-    public static ItemRequestDto mapToRequestDto(Item item) {
-        return ItemRequestDto.builder()
+    public static ItemDto toItemDto(Item item) {
+        return ItemDto.builder()
                 .id(item.getId())
                 .name(item.getName())
                 .description(item.getDescription())
-                .available(item.isAvailable())
+                .available(item.getAvailable())
+                .owner(UserMapper.toUserDto(item.getOwner()))
+                .requestId(item.getRequest() != null ? item.getRequest().getId() : null)
                 .build();
     }
 
-
-    public static Item mapToItem(ItemInputDto itemInputDto, Item item) {
-
-        if (itemInputDto.getName() != null) {
-            item.setName(itemInputDto.getName());
-        }
-
-        if (itemInputDto.getDescription() != null) {
-            item.setDescription(itemInputDto.getDescription());
-        }
-
-        if (itemInputDto.getAvailable() != null) {
-            item.setAvailable(itemInputDto.getAvailable());
-        }
-
-        return item;
+    public static Item toItem(ItemDto itemDto) {
+        return Item.builder()
+                .id(itemDto.getId())
+                .name(itemDto.getName())
+                .description(itemDto.getDescription())
+                .available(itemDto.getAvailable())
+                .owner(UserMapper.toUser(itemDto.getOwner()))
+                .build();
     }
 
+    public static ItemDtoFull toItemDtoFull(Item item) {
+        return ItemDtoFull.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .owner(UserMapper.toUserDto(item.getOwner()))
+                .available(item.getAvailable())
+                .request(item.getRequest() != null ? RequestMapper.toRequestDto(item.getRequest()) : null)
+                .build();
+    }
 }
