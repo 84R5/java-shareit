@@ -208,22 +208,22 @@ public class ItemServiceImpl implements ItemService {
     }
 
     public void addLastAdnNextBooking(ItemDtoFull itemDto) {
-        List<Booking> bookings = bookingRepository
-                .findBookingByItemIdOrderByStartAsc(itemDto.getId());
-        LocalDateTime now = LocalDateTime.now();
-        BookingRequestDto lastBooking = null;
-        BookingRequestDto nextBooking = null;
+            List<Booking> bookings = bookingRepository
+                    .findBookingByItemIdOrderByStartAsc(itemDto.getId());
+            LocalDateTime now = LocalDateTime.now();
+            BookingRequestDto lastBooking = null;
+            BookingRequestDto nextBooking = null;
 
-        for (Booking booking : bookings) {
-            if (booking.getEnd().isBefore(now)) {
-                lastBooking = BookingMapper.toBookingRequestDto(booking);
-            } else if (booking.getStart().isAfter(now)) {
-                nextBooking = BookingMapper.toBookingRequestDto(booking);
-                break;
+            for (Booking booking : bookings) {
+                if (booking.getEnd().isBefore(now)) {
+                    lastBooking = BookingMapper.toBookingRequestDto(booking);
+                } else if (booking.getStart().isAfter(now)) {
+                    nextBooking = BookingMapper.toBookingRequestDto(booking);
+                    break;
+                }
             }
-        }
 
-        itemDto.setLastBooking(lastBooking);
-        itemDto.setNextBooking(nextBooking);
+            itemDto.setLastBooking(lastBooking);
+            itemDto.setNextBooking(nextBooking);
     }
 }
