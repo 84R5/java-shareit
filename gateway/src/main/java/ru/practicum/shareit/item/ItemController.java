@@ -2,6 +2,7 @@ package ru.practicum.shareit.item;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentInputDto;
@@ -11,7 +12,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
-
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/items")
@@ -23,7 +24,7 @@ public class ItemController {
     @PostMapping
     public ResponseEntity<Object> create(@RequestHeader(HEADER) Long userId,
                                          @RequestBody @Valid ItemInputDto itemDto) {
-        //log.info("Получен POST-запрос к эндпоинту: '/items' на добавление вещи владельцем с ID={}", userId);
+        log.info("Получен POST-запрос к эндпоинту: '/items' на добавление вещи владельцем с ID={}", userId);
         return client.create(userId, itemDto);
     }
 
@@ -32,8 +33,8 @@ public class ItemController {
     public ResponseEntity<Object> createComment(@RequestHeader(HEADER) Long userId,
                                                 @RequestBody @Valid CommentInputDto commentDto,
                                                 @PathVariable("itemId") Long itemId) {
-        //log.info("Получен POST-запрос к эндпоинту: '/items/comment' на" +
-        //        " добавление отзыва пользователем с ID={}", userId);
+        log.info("Получен POST-запрос к эндпоинту: '/items/comment' на" +
+               " добавление отзыва пользователем с ID={}", userId);
         return client.createComment(userId, itemId, commentDto);
     }
 
@@ -41,7 +42,7 @@ public class ItemController {
     public ResponseEntity<Object> getItemsByOwner(@RequestHeader(HEADER) Long ownerId,
                                                   @PositiveOrZero @RequestParam(value = "from", defaultValue = "0") Integer from,
                                                   @Positive @RequestParam(value = "size", defaultValue = "10") Integer size) {
-        //log.info("Получен GET-запрос к эндпоинту: '/items' на получение всех вещей владельца с ID={}", ownerId);
+        log.info("Получен GET-запрос к эндпоинту: '/items' на получение всех вещей владельца с ID={}", ownerId);
         return client.getItemsByOwner(ownerId, from, size);
     }
 
@@ -50,14 +51,14 @@ public class ItemController {
                                                         @RequestParam String text,
                                                         @PositiveOrZero @RequestParam(value = "from", defaultValue = "0") Integer from,
                                                         @Positive @RequestParam(value = "size", defaultValue = "10") Integer size) {
-        //log.info("Получен GET-запрос к эндпоинту: '/items/search' на поиск вещи с текстом={}", text);
+        log.info("Получен GET-запрос к эндпоинту: '/items/search' на поиск вещи с текстом={}", text);
         return client.getItemsBySearch(userId, text, from, size);
     }
 
     @GetMapping("/{itemId}")
     public ResponseEntity<Object> getItemByIdFromUser(@RequestHeader(HEADER) Long userId,
                                                       @PathVariable("itemId") Long itemId) {
-        //log.info("Получен GET-запрос к эндпоинту: '/items' на получение вещи с ID={}", itemId);
+        log.info("Получен GET-запрос к эндпоинту: '/items' на получение вещи с ID={}", itemId);
         return client.getItemByIdFromUser(userId, itemId);
     }
 
@@ -66,7 +67,7 @@ public class ItemController {
     public ResponseEntity<Object> update(@RequestHeader(HEADER) Long userId,
                                          @RequestBody ItemInputDto itemDto,
                                          @PathVariable Long itemId) {
-        //log.info("Получен PATCH-запрос к эндпоинту: '/items' на обновление вещи с ID={}", itemId);
+        log.info("Получен PATCH-запрос к эндпоинту: '/items' на обновление вещи с ID={}", itemId);
         return client.update(userId, itemId, itemDto);
     }
 }

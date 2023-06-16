@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
@@ -122,7 +123,7 @@ class ItemServiceImplTest {
     void getItemsByOwner_returnItem1() {
         UserDto u = UserMapper.toUserDto(user1);
         ItemDtoFull itemDtoFull = ItemMapper.toItemDtoFull(item1);
-        when(itemRepository.findByOwner(user1, PageRequest.of(1, 10))).thenReturn(List.of(item1));
+        when(itemRepository.findByOwner(user1, PageRequest.of(1, 10, Sort.by("id").ascending()))).thenReturn(List.of(item1));
         when(userService.getUserById(1L)).thenReturn(u);
 
         assertThat(itemService.getItemsByOwner(1L, 1, 10)).isEqualTo(List.of(itemDtoFull));
