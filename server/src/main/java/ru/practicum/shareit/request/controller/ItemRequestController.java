@@ -5,8 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.RequestDto;
 import ru.practicum.shareit.request.service.RequestService;
 
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
@@ -31,8 +29,8 @@ public class ItemRequestController {
 
     @GetMapping("/all")
     public List<RequestDto> getAllRequestsOthersUser(@RequestHeader(HEADER) Long userId,
-                                                     @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
-                                                     @RequestParam(name = "size", defaultValue = "20") @Positive Integer size) {
+                                                     @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                                     @RequestParam(name = "size", defaultValue = "20") Integer size) {
         return requestService.getAllRequestsOthersUser(userId, from, size);
     }
 

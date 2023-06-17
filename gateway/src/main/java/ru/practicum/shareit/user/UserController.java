@@ -15,7 +15,7 @@ public class UserController {
     private final UserClient client;
 
     @PostMapping
-    public ResponseEntity<Object> create(@Valid @RequestBody UserInputDto userDto) {
+    public ResponseEntity<Object> create(@RequestBody @Valid UserInputDto userDto) {
         return client.create(userDto);
     }
 

@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import ru.practicum.shareit.exception.ErrorHandler;
 import ru.practicum.shareit.exception.ErrorResponse;
 import ru.practicum.shareit.exception.ObjectNotFoundException;
-import ru.practicum.shareit.exception.UnsupportedStateException;
 
 class ErrorTest {
     private ErrorHandler errorHandler;
@@ -16,14 +15,6 @@ class ErrorTest {
     @BeforeEach
     public void setUp() {
         errorHandler = new ErrorHandler();
-    }
-
-    @Test
-    public void handleUnsupportedStateException_ReturnsInternalServerError() {
-        UnsupportedStateException ex = new UnsupportedStateException("Unsupported state");
-        ResponseEntity<ErrorResponse> responseEntity = errorHandler.handleUnsupportedStateException(ex);
-
-        Assertions.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
     }
 
     @Test
@@ -38,14 +29,6 @@ class ErrorTest {
     public void createNotFoundObjectException() {
         String message = "Object not found";
         ObjectNotFoundException exception = new ObjectNotFoundException(message);
-
-        Assertions.assertEquals(message, exception.getMessage());
-    }
-
-    @Test
-    public void unsupportedStateException() {
-        String message = "Unsupported state";
-        UnsupportedStateException exception = new UnsupportedStateException(message);
 
         Assertions.assertEquals(message, exception.getMessage());
     }

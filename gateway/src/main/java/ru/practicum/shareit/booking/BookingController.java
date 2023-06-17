@@ -3,14 +3,18 @@ package ru.practicum.shareit.booking;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingInputDto;
+import ru.practicum.shareit.booking.dto.State;
+import ru.practicum.shareit.exception.UnsupportedStateException;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
 @Slf4j
+@Validated
 @RestController
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
@@ -49,18 +53,21 @@ public class BookingController {
     @GetMapping
     public ResponseEntity<Object> getBookings(@RequestHeader(HEADER) Long userId,
                                               @RequestParam(name = "state", defaultValue = "ALL") String state,
-                                              @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
-                                              @RequestParam(name = "size", defaultValue = "20") @Positive Integer size) {
+                                              @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                              @Positive @RequestParam(name = "size", defaultValue = "20") Integer size) {
+        State.from(state).orElseThrow(() -> new UnsupportedStateException("Unknown state: " + state));
+
         log.info("Received GET request to endpoint: '/bookings' to get a list of all the user's bookings" +
-               " from a User with ID={} param STATE={}", userId, state);
+                " from a User with ID={} param STATE={}", userId, state);
         return bookingClient.getBookingsWhisState(userId, state, from, size);
     }
 
     @GetMapping("/owner")
     public ResponseEntity<Object> getBookingsOwner(@RequestHeader(HEADER) Long userId,
                                                    @RequestParam(name = "state", defaultValue = "ALL") String state,
-                                                   @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
-                                                   @RequestParam(name = "size", defaultValue = "20") @Positive Integer size) {
+                                                   @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                                   @Positive @RequestParam(name = "size", defaultValue = "20") Integer size) {
+        State.from(state).orElseThrow(() -> new UnsupportedStateException("Unknown state: " + state));
         log.info("Received GET request to endpoint: '/bookings/owner' to receive a list " +
                 "of all bookings of the user's belongings from a User with ID={} param STATE={}", userId, state);
         return bookingClient.getBookingsOwner(userId, state, from, size);

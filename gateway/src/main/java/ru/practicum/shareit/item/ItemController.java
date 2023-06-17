@@ -4,6 +4,7 @@ package ru.practicum.shareit.item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentInputDto;
 import ru.practicum.shareit.item.dto.ItemInputDto;
@@ -13,6 +14,7 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
 @Slf4j
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/items")
@@ -34,7 +36,7 @@ public class ItemController {
                                                 @RequestBody @Valid CommentInputDto commentDto,
                                                 @PathVariable("itemId") Long itemId) {
         log.info("Получен POST-запрос к эндпоинту: '/items/comment' на" +
-               " добавление отзыва пользователем с ID={}", userId);
+                " добавление отзыва пользователем с ID={}", userId);
         return client.createComment(userId, itemId, commentDto);
     }
 

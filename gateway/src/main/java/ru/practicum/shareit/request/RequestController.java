@@ -2,13 +2,16 @@ package ru.practicum.shareit.request;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.RequestInputDto;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
 @RestController
+@Validated
 @RequestMapping(path = "/requests")
 @RequiredArgsConstructor
 public class RequestController {
@@ -19,7 +22,7 @@ public class RequestController {
 
     @PostMapping
     public ResponseEntity<Object> create(@RequestHeader(HEADER) Long userId,
-                                         @RequestBody RequestInputDto requestDto) {
+                                         @RequestBody @Valid RequestInputDto requestDto) {
         return client.create(userId, requestDto);
     }
 
@@ -30,8 +33,8 @@ public class RequestController {
 
     @GetMapping("/all")
     public ResponseEntity<Object> getAllRequestsOthersUser(@RequestHeader(HEADER) Long userId,
-                                                           @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
-                                                           @RequestParam(name = "size", defaultValue = "20") @Positive Integer size) {
+                                                           @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                                           @Positive @RequestParam(name = "size", defaultValue = "20") Integer size) {
         return client.getAllRequestsOthersUser(userId, from, size);
     }
 

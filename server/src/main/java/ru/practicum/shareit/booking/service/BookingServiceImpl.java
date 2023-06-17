@@ -13,7 +13,6 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.ObjectNotFoundException;
-import ru.practicum.shareit.exception.UnsupportedStateException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.mapper.UserMapper;
@@ -49,9 +48,9 @@ public class BookingServiceImpl implements BookingService {
         if (!item.getAvailable()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Item is not available.");
         }
-        if (bookingRequestDto.getStart() == null || bookingRequestDto.getEnd() == null) {
+        /*if (bookingRequestDto.getStart() == null || bookingRequestDto.getEnd() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong Timestamps");
-        }
+        }*/
         if (bookingRequestDto.getStart().isAfter(bookingRequestDto.getEnd())
                 || bookingRequestDto.getEnd().isBefore(bookingRequestDto.getStart())
                 || bookingRequestDto.getStart().equals(bookingRequestDto.getEnd())) {
@@ -130,7 +129,7 @@ public class BookingServiceImpl implements BookingService {
                         .map(BookingMapper::toBookingDto)
                         .collect(Collectors.toList());
             default:
-                throw new UnsupportedStateException("Unknown state: " + state);
+                throw new IllegalArgumentException("Unknown state: " + state);
         }
     }
 
@@ -176,7 +175,7 @@ public class BookingServiceImpl implements BookingService {
                         .map(BookingMapper::toBookingDto)
                         .collect(Collectors.toList());
             default:
-                throw new UnsupportedStateException("Unknown state: " + state);
+                throw new IllegalArgumentException("Unknown state: " + state);
         }
     }
 

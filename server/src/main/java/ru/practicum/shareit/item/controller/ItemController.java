@@ -9,9 +9,6 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoFull;
 import ru.practicum.shareit.item.service.ItemService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @Slf4j
@@ -25,7 +22,7 @@ public class ItemController {
     @ResponseBody
     @PostMapping
     public ItemDto create(@RequestHeader(HEADER) Long userId,
-                          @RequestBody @Valid ItemDto itemDto) {
+                          @RequestBody ItemDto itemDto) {
         log.info("Получен POST-запрос к эндпоинту: '/items' на добавление вещи владельцем с ID={}", userId);
         return itemService.create(userId, itemDto);
     }
@@ -33,7 +30,7 @@ public class ItemController {
     @ResponseBody
     @PostMapping("/{itemId}/comment")
     public CommentDto createComment(@RequestHeader(HEADER) Long userId,
-                                    @RequestBody @Valid CommentDto commentDto,
+                                    @RequestBody CommentDto commentDto,
                                     @PathVariable("itemId") Long itemId) {
         log.info("Получен POST-запрос к эндпоинту: '/items/comment' на" +
                 " добавление отзыва пользователем с ID={}", userId);
@@ -42,8 +39,8 @@ public class ItemController {
 
     @GetMapping
     public List<ItemDtoFull> getItemsByOwner(@RequestHeader(HEADER) Long ownerId,
-                                             @PositiveOrZero @RequestParam(value = "from", defaultValue = "0") Integer from,
-                                             @Positive @RequestParam(value = "size", defaultValue = "10") Integer size) {
+                                             @RequestParam(value = "from", defaultValue = "0") Integer from,
+                                             @RequestParam(value = "size", defaultValue = "10") Integer size) {
         log.info("Получен GET-запрос к эндпоинту: '/items' на получение всех вещей владельца с ID={}", ownerId);
         return itemService.getItemsByOwner(ownerId, from, size);
     }
@@ -51,8 +48,8 @@ public class ItemController {
     @GetMapping("/search")
     public List<ItemDto> getItemsBySearchQuery(@RequestHeader(HEADER) Long userId,
                                                @RequestParam String text,
-                                               @PositiveOrZero @RequestParam(value = "from", defaultValue = "0") Integer from,
-                                               @Positive @RequestParam(value = "size", defaultValue = "10") Integer size) {
+                                               @RequestParam(value = "from", defaultValue = "0") Integer from,
+                                               @RequestParam(value = "size", defaultValue = "10") Integer size) {
         log.info("Получен GET-запрос к эндпоинту: '/items/search' на поиск вещи с текстом={}", text);
         return itemService.getItemsBySearch(userId, text, from, size);
     }

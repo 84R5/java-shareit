@@ -5,10 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.exception.ObjectNotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
@@ -40,9 +38,6 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public RequestDto create(Long userId, RequestDto requestDto) {
         LocalDateTime now = LocalDateTime.now(Clock.systemDefaultZone());
-        if (requestDto.getDescription() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong description.");
-        }
         UserDto requesterDto = userService.getUserById(userId);
         requestDto.setRequester(requesterDto);
         requestDto.setCreated(now);
@@ -67,9 +62,6 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public List<RequestDto> getAllRequestsOthersUser(Long userId, Integer from, Integer size) {
         if (from != null && size != null) {
-            if (from < 0 || size <= 0) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong request.");
-            }
             int pageNumber = (int) Math.ceil((double) from / size);
             Pageable pageable = PageRequest.of(pageNumber, size);
             return requestRepository.findByRequesterIdNot(userId, pageable).stream()

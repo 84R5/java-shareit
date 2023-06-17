@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ErrorHandler {
 
-    @ExceptionHandler(ObjectNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleRequestNotFoundException(ObjectNotFoundException ex) {
+    @ExceptionHandler(UnsupportedStateException.class)
+    public ResponseEntity<ErrorResponse> handleUnsupportedStateException(UnsupportedStateException ex) {
         ErrorResponse errorResponse = new ErrorResponse(ex.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

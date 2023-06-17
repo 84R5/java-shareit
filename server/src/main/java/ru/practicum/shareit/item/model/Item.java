@@ -6,8 +6,6 @@ import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "items")
@@ -22,15 +20,12 @@ public class Item {
     Long id;
 
     @Column(nullable = false)
-    @NotEmpty(message = "Item name can't be Empty")
     String name;
 
     @Column(nullable = false)
-    @NotEmpty(message = "Item description can't be Empty")
     String description;
 
     @Column(nullable = false)
-    @NotNull(message = "Item availability can't be Null")
     Boolean available;
 
     @ManyToOne(fetch = FetchType.LAZY)
